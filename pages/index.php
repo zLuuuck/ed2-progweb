@@ -7,7 +7,6 @@
 </head>
 <body>
     <h1>ata</h1>
-
     <?php
         echo "<p>Hello, World!</p>";
     ?>
