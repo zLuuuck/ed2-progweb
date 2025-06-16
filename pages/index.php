@@ -6,9 +6,12 @@
     <title>testes</title>
 </head>
 <body>
-    <h1>ata</h1>
+    <h1>Home</h1>
     <?php
         echo "<p>Hello, World!</p>";
+
+        echo "<a href='./produtos.php'><button>Click Me!</button></a>";
+
     ?>
 </body>
 </html>
