@@ -3,15 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>testes</title>
+    <title>Adicone Produtos</title>
 </head>
 <body>
-    <h1>Home</h1>
-    <?php
-        echo "<p>Hello, World!</p>";
-
-        echo "<a href='./produtos.php'><button>Click Me!</button></a>";
-
-    ?>
+    <h1>Somente admin</h1>
 </body>
 </html>
