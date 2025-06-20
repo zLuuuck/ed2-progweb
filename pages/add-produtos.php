@@ -1,3 +1,11 @@
+<?php
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    echo "<script>alert('Você precisa estar logado para acessar esta página!');</script>";
+    header("Refresh: 0;url=login.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -6,6 +14,6 @@
     <title>Adicone Produtos</title>
 </head>
 <body>
-    <h1>Somente admin</h1>
+    <h1>Adicione um produto à loja!</h1>
 </body>
 </html>
