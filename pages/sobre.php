@@ -6,6 +6,6 @@
     <title>Sobre Guri Games</title>
 </head>
 <body>
-    
+    <h1>Sobre Guri Games</h1>
 </body>
 </html>

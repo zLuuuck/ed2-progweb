@@ -12,7 +12,7 @@ if (isset($_SESSION['user_id'])) {
 // Função para conectar ao banco de dados SQLite e criar a tabela se não existir ~Lucas
 function conectarBanco()
 {
-    $db = new PDO('sqlite:login.db');
+    $db = new PDO('sqlite:../../db/login.db');
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $stmt = $db->query("SELECT name FROM sqlite_master WHERE type='table' AND name='login'");

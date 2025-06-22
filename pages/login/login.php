@@ -14,7 +14,7 @@ if (isset($_SESSION['user_id'])) {
 function conectarBanco()
 {
     try {
-        $db = new PDO('sqlite:login.db');
+        $db = new PDO('sqlite:../../db/login.db');
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         return $db;
     } catch (PDOException $e) {

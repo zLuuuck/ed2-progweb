@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -5,15 +8,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>testes</title>
-    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="stylesheet" href="../styles/index.css">
 </head>
 
 <body>
     <h1>Home</h1>
+    
     <?php
     echo "<p>Hello, World!</p>";
-    session_start();
-
     if (isset($_SESSION['user_id']) && !empty($_SESSION['user_id'])) {
         // Usuário está logado
         $nomeUsuario = $_SESSION['username'];
@@ -24,17 +26,23 @@
         echo "<br>";
         echo "Seu nome é: " . htmlspecialchars($_SESSION['nome']); // Evitar XSS
         echo "<br>";
+        echo "<form action='./login/logout.php' method='post' style='display: inline;'> <button type='submit'>Sair</button></form>";
     } else {
         // Usuário não está logado
         echo "Você não está logado. Por favor, faça login.";
         echo "<br>";
         echo "<a href='./login/login.php'><button>login</button></a>";
-        exit;
     }
     ?>
-    <form action="./login/logout.php" method="post" style="display: inline;">
-        <button type="submit">Sair</button>
-    </form>
+
+
+    <h2> Botões de ação - testes - </h2>
+    <a href="./perfil.php"><button>Perfil</button></a><br>
+    <a href="./produtos.php"><button>Produtos</button></a><br>
+    <a href="./add-produtos.php"><button>Adicionar produtos</button></a><br>
+    <a href="./sobre.php"><button>Sobre</button></a><br>
+    <a href="./login/login.php"><button>Login</button></a><br>
+    <a href="./login/registro.php"><button>Registro</button></a><br>
 
 </body>
 
