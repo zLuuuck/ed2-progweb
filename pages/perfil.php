@@ -10,12 +10,19 @@ if (!isset($_SESSION['user_id'])) {
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil</title>
+    <link rel="stylesheet" href="../styles/navbar.css">
 </head>
+
 <body>
+    <?php
+    include_once '../components/navbar.php';
+    ?>
     <h1> Bem vindo <?php echo htmlspecialchars($_SESSION['username']); ?> </h1>
 </body>
+
 </html>

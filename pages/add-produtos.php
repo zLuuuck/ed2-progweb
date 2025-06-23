@@ -141,9 +141,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adicone Produtos</title>
     <link rel="stylesheet" href="../styles/add-produtos.css">
+    <link rel="stylesheet" href="../styles/navbar.css">
 </head>
 
 <body>
+    <?php
+    include_once '../components/navbar.php';
+    ?>
+
     <h1>Adicione um produto à loja!</h1>
     <div id="produto-form">
         <h1>Seu produto:</h1>

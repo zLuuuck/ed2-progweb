@@ -12,7 +12,7 @@ if (isset($_SESSION['user_id'])) {
 // Função para conectar ao banco de dados SQLite e criar a tabela se não existir ~Lucas
 function conectarBanco()
 {
-    $db = new PDO('sqlite:../../db/login.db');
+    $db = new PDO('sqlite:../db/login.db');
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $stmt = $db->query("SELECT name FROM sqlite_master WHERE type='table' AND name='login'");
@@ -89,7 +89,7 @@ function validarDados($username, $nome, $email, $birth, $password, $passwordConf
 // Função para cadastrar o usuário no banco de dados ~Lucas
 function cadastrarUsuario($db, $username, $nome, $email, $birth, $password)
 {
-        $senhaCriptografada = password_hash($password, PASSWORD_DEFAULT);
+    $senhaCriptografada = password_hash($password, PASSWORD_DEFAULT);
 
     // Verifica se o username já existe
     $stmt = $db->prepare("SELECT id FROM login WHERE username = :username");
@@ -135,10 +135,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $password = $_POST["password"];
     $passwordConfirm = $_POST["password-confirm"];
 
-    $validacao = validarDados($username, $nome,$email, $birth, $password, $passwordConfirm);
+    $validacao = validarDados($username, $nome, $email, $birth, $password, $passwordConfirm);
 
-    if ($validacao !== '') { 
-        $mensagem = $validacao; 
+    if ($validacao !== '') {
+        $mensagem = $validacao;
         $mensagem_cor = 'orange';
     } else {
         $resultadoCadastro = cadastrarUsuario($db, $username, $nome, $email, $birth, $password);
@@ -146,7 +146,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $mensagem = "Cadastro realizado com sucesso! Redirecionando...";
             $mensagem_cor = 'green';
 
-            header("Refresh: 2; url=login.php");        
+            header("Refresh: 2; url=login.php");
         } else {
             $mensagem = $resultadoCadastro;
             $mensagem_cor = 'orange';
@@ -162,11 +162,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Cadastrar-se</title>
-    <link rel="stylesheet" href="../../styles/registro.css" />
+    <link rel="stylesheet" href="../styles/registro.css" />
+    <link rel="stylesheet" href="../styles/navbar.css">
 
 </head>
 
 <body>
+    <?php
+    include_once '../components/navbar.php';
+    ?>
+
     <div id="cadastro-form">
         <h1>Cadastro</h1>
         <!-- Mostrando a mensagem de erro ou sucesso ~ Lucas -->
@@ -177,33 +182,33 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <form method="post" novalidate>
             <div class="float-label">
                 <label for="username">Usuário:</label>
-                <input type="text" id="username" name="username" required minlength="3" value="<?= htmlspecialchars($_POST['username'] ?? '') ?>"/>
+                <input type="text" id="username" name="username" required minlength="3" value="<?= htmlspecialchars($_POST['username'] ?? '') ?>" />
             </div>
 
             <div class="float-label">
                 <label for="nome">Nome Completo:</label>
-                <input type="text" id="nome" name="nome" required minlength="3" value="<?= htmlspecialchars($_POST['nome'] ?? '') ?>"/>
+                <input type="text" id="nome" name="nome" required minlength="3" value="<?= htmlspecialchars($_POST['nome'] ?? '') ?>" />
             </div>
 
             <div class="float-label">
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required value="<?= htmlspecialchars($_POST['email'] ?? '') ?>"/>
+                <input type="email" id="email" name="email" required value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" />
             </div>
-            
+
             <!-- Favor fazer um input mais bonito, não sei como faz, se vira ~Lucas -->
             <div class="float-label">
                 <label for="birth">Data de nascimento:</label>
-                <input type="date" id="birth" name="birth" required value="<?= htmlspecialchars($_POST['birth'] ?? '') ?>"/>
+                <input type="date" id="birth" name="birth" required value="<?= htmlspecialchars($_POST['birth'] ?? '') ?>" />
             </div>
 
             <div class="float-label">
                 <label for="password">Senha:</label>
-                <input type="password" id="password" name="password" required minlength="6" value="<?= htmlspecialchars($_POST['password'] ?? '') ?>"/>
+                <input type="password" id="password" name="password" required minlength="6" value="<?= htmlspecialchars($_POST['password'] ?? '') ?>" />
             </div>
 
             <div class="float-label">
                 <label for="password-confirm">Confirme a senha:</label>
-                <input type="password" id="password-confirm" name="password-confirm" required minlength="6" value="<?= htmlspecialchars($_POST['password-confirm'] ?? '') ?>"/>
+                <input type="password" id="password-confirm" name="password-confirm" required minlength="6" value="<?= htmlspecialchars($_POST['password-confirm'] ?? '') ?>" />
             </div>
 
             <button type="submit">Cadastrar</button>

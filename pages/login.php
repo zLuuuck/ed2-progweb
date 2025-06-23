@@ -7,14 +7,14 @@ session_start();
 
 if (isset($_SESSION['user_id'])) {
     echo "<script>alert('Você já está logado!');</script>";
-    header("Refresh: 0;url=../index.php");
-    exit();
+    header("Refresh: 0; url=./index.php");
+    exit(); 
 }
 
 function conectarBanco()
 {
     try {
-        $db = new PDO('sqlite:../../db/login.db');
+        $db = new PDO('sqlite:../db/login.db');
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         return $db;
     } catch (PDOException $e) {
@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $_SESSION['birth'] = $usuario['birth'];
         $mensagem = "✅ Login realizado com sucesso! Redirecionando. . .";
         $mensagem_cor = "green";
-        header("Refresh: 2; url=../index.php");
+        header("Refresh: 2; url=./index.php");
     } else {
         $mensagem = "⚠️ Usuário ou senha incorretos.";
         $mensagem_cor = "red";
@@ -63,10 +63,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="../../styles/login.css">
+    <link rel="stylesheet" href="../styles/login.css">
+    <link rel="stylesheet" href="../styles/navbar.css">
 </head>
 
 <body>
+    <?php
+    include_once '../components/navbar.php';
+    ?>
+
     <a href="../index.php"><button>Voltar</button></a>
     <div id="login-form">
         <h1>Login</h1>

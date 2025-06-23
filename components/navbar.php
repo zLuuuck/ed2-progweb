@@ -1,46 +1,37 @@
 <?php
-
-$siteName = "Guri Games";
-$navLinks = [
-    "Home"     => "index.php",
-    "Produtos" => "products.php",
-    "Conta"    => "conta/conta.php",
-    "Sobre"    => "sobre.php"
-];
-$currentPageTitle = isset($pageTitle) ? $pageTitle . " - " . $siteName : $siteName;
+$isLoggedIn = isset($_SESSION['user_id']);
+$isAdmin = isset($_SESSION['user_id']) && $_SESSION['user_id'] === 1;
 ?>
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($currentPageTitle); ?></title>
-    
+<nav class="navbar">
+    <a href="../pages/index.php" class="logo">Guri Games</a>
+    <button class="hamburger" id="hamburger">&#9776;</button>
 
-    <link rel="stylesheet" href="../css/sobre.css"> 
-    
-    <script src="https://kit.fontawesome.com/0dc50eaa4b.js" crossorigin="anonymous"></script>
-</head>
+    <ul class="navbar-list" id="navbar-list">
+        <li><a href="../pages/index.php">Home</a></li>
+        <li><a href="../pages/produtos.php">Produtos</a></li>
+        <?php if ($isLoggedIn): ?>
+            <?php if ($isAdmin): ?>
+                <li><a href="../pages/add-produtos.php">Adicionar Produtos</a></li>
+            <?php endif; ?>
+            <li><a href="../pages/perfil.php">Conta</a></li>
+            <li><a href="../pages/logout.php" class="btn-sair">Sair</a></li>
+        <?php else: ?>
+            <li><a href="../pages/login.php">Entrar</a></li>
+        <?php endif; ?>
+        <li><a href="../pages/sobre.php">Sobre</a></li>
 
-<body>
-    <header class="cabeçalho">
-        <nav>
-            <a class="logo" href="index.php"><?php echo $siteName; ?></a>
-            <div class="mobile-menu" onclick="toggleMenu()">
-                <div class="line1"></div>
-                <div class="line2"></div>
-                <div class="line3"></div>
-            </div>
-            <ul class="navbar">
-                <?php
-                foreach ($navLinks as $name => $url) {
-                    echo '<li><a href="' . htmlspecialchars($url) . '">' . htmlspecialchars($name) . '</a></li>';
-                }
-                ?>
-                <li>
-                    <a href="checkout.php"><i class="fas fa-shopping-cart"></i><span class="cart-count">0</span></a>
-                </li>
-            </ul>
-        </nav>
-    </header>
+    </ul>
+</nav>
+
+<!-- Script para o menu hambúrguer (adicione isso também) -->
+<script>
+    const hamburger = document.getElementById('hamburger');
+    const navbarList = document.getElementById('navbar-list');
+
+    if (hamburger && navbarList) {
+        hamburger.addEventListener('click', () => {
+            navbarList.classList.toggle('active');
+        });
+    }
+</script>
