@@ -2,11 +2,12 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-
-session_start();
-if (!isset($_SESSION['user_id'])) {
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] !== 1) {
     echo "<script>alert('Você precisa estar logado para acessar esta página!');</script>";
-    header("Refresh: 0;url=./login/login.php");
+    header("Refresh: 0;url=./login.php");
     exit();
 }
 
@@ -15,27 +16,8 @@ $modelo = $_POST['modelo'] ?? '';
 $cor = $_POST['cor'] ?? '';
 $quantidade = $_POST['quantidade'] ?? '';
 
-function conectarBanco()
-{
-    $db = new PDO('sqlite:../db/produtos.db');
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    $stmt = $db->query("SELECT name FROM sqlite_master WHERE type='table' AND name='produtos'");
-    $tabelaExiste = $stmt->fetch();
-
-    if (!$tabelaExiste) {
-        $db->exec("CREATE TABLE produtos (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nome TEXT NOT NULL,
-            modelo TEXT NOT NULL UNIQUE,
-            cor TEXT NOT NULL,
-            quantidade INTEGER NOT NULL,
-            imagem TEXT
-        )");
-    }
-    return $db;
-}
-
+require_once '../scripts/conectarBanco.php';
+require_once '../scripts/func_produtos.php';
 function verificarDados($db, $nome, $modelo, $cor, $quantidade, $arquivoImagem)
 {
     if (strlen($nome) < 2 || strlen($modelo) < 2 || strlen($cor) < 2) {
@@ -105,7 +87,8 @@ function cadastrarProduto($db, $nome, $modelo, $cor, $quantidade, $imagemPath)
 }
 
 $mensagem = "";
-$db = conectarBanco();
+$db = conectarBanco('produtos');
+
 $mensagem_cor = 'darkred';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nome = trim($_POST['nome']);
@@ -116,21 +99,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $erroValidacao = verificarDados($db, $nome, $modelo, $cor, $quantidade, $imagemFile);
     if ($erroValidacao !== '') {
-        $mensagem = $erroValidacao;
-        $mensagem_cor = 'orange';
+        $mensagem = mensagem($erroValidacao, 'ERROR');
     } else {
         $imagemPath = salvarImagem($_FILES['imagem']);
         if (str_contains($imagemPath, 'Erro')) {
-            $mensagem = $imagemPath;
-            $mensagem_cor = 'orange';
+            $mensagem = mensagem($imagemPath, 'ERROR');
         } else {
             if (cadastrarProduto($db, $nome, $modelo, $cor, (int)$quantidade, $imagemPath)) {
-                $mensagem = "Produto cadastrado com sucesso!";
-                $mensagem_cor = 'green';
+                $mensagem = mensagem('Produto adicionado com sucesso!', 'SUCCESS');
                 $nome = $modelo = $cor = $quantidade = '';
             } else {
-                $mensagem = "Erro ao cadastrar produto.";
-                $mensagem_cor = 'red';
+                $mensagem = mensagem('Erro ao adicionar produto', 'ERROR');
             }
         }
     }
@@ -156,7 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div id="produto-form">
         <h1>Seu produto:</h1>
         <?php if ($_SERVER["REQUEST_METHOD"] === "POST" && $mensagem): ?>
-            <p style="color: <?= $mensagem_cor ?>; font-weight: bold;"><?= $mensagem ?></p>
+            <?= $mensagem ?>
         <?php endif; ?>
         <form action="" method="post" enctype="multipart/form-data">
             <div class="float-label">
