@@ -3,11 +3,43 @@
     padding: 0;
     box-sizing: border-box;
 }
+
 body {
     padding-top: 100px; /* Isso empurra o conteúdo para baixo da navbar fixa */
     font-family: Arial, sans-serif;
-    background-color: #f2f2f2;
+    background-color: #ffffff;
 }
+
+.mensagem-sucesso {
+    background-color: #d4edda;
+    color: #155724;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #c3e6cb;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.mensagem-erro {
+    background-color: #f8d7da;
+    color: #721c24;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+}
+
+.mensagem-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #bee5eb;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+
 .navbar {
     background-color: #1e1e1e;
     color: white;
@@ -214,3 +246,4 @@ body {
         color: #bd2130; /* Texto vermelho ao clicar */
     }
 }
+

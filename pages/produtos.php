@@ -2,42 +2,57 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 $isAdmin = isset($_SESSION['user_id']) && $_SESSION['user_id'] === 1;
 
-$db = conectarBanco(); // Mover a conexão para o início, para usar antes de editarProduto
+require_once '../scripts/conectarBanco.php';
+require_once '../scripts/func_produtos.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'editar' && $isAdmin) {
-    header('Content-Type: application/json; charset=utf-8');  // *** [1] Cabeçalho JSON para resposta AJAX ***
-
-    // Recebe os dados da edição
-    $id = $_POST['id'] ?? null;
-    $nome = trim($_POST['nome'] ?? '');
-    $modelo = trim($_POST['modelo'] ?? '');
-    $cor = trim($_POST['cor'] ?? '');
-    $quantidade = intval($_POST['quantidade'] ?? 0);
-    $imagemFile = $_FILES['imagem'] ?? null;
-
-    if (!$id) {
-        echo json_encode(['status' => 'error', 'msg' => 'ID do produto ausente.']);
-        exit;
-    }
-
-    $resultado = editarProduto($db, $id, $nome, $modelo, $cor, $quantidade, $imagemFile);
-    echo json_encode($resultado);
-    exit;
-}
-
-function conectarBanco()
-{
-    $db = new PDO('sqlite:../db/database.db');
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    return $db;
-}
+$db = conectarBanco('produtos');
 
 function buscarProdutos($db)
 {
-    $stmt = $db->query("SELECT * FROM produtos ORDER BY id DESC");
+    $filtro = trim($_GET['filtro'] ?? '');
+    $ordenar = $_GET['ordenar'] ?? '';
+
+    $sql = "SELECT * FROM produtos";
+    $params = [];
+
+    if ($filtro !== '') {
+        $sql .= " WHERE nome LIKE :filtro";
+        $params[':filtro'] = "%$filtro%";
+    }
+
+    switch ($ordenar) {
+        case 'az':
+            $sql .= " ORDER BY nome ASC";
+            break;
+        case 'za':
+            $sql .= " ORDER BY nome DESC";
+            break;
+        case 'antigo':
+            $sql .= " ORDER BY id ASC";
+            break;
+        case 'novo':
+            $sql .= " ORDER BY id DESC";
+            break;
+        case 'maior_qtd':
+            $sql .= " ORDER BY quantidade DESC";
+            break;
+        case 'menor_qtd':
+            $sql .= " ORDER BY quantidade ASC";
+            break;
+        default:
+            $sql .= " ORDER BY id DESC"; // padrão
+            break;
+    }
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute($params);
+
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
@@ -73,9 +88,6 @@ function editarProduto($db, $id, $nome, $modelo, $cor, $quantidade, $imagemFile 
         return ['status' => 'error', 'msg' => "Já existe outro produto com esse modelo."];
     }
 
-    $imagemPath = null;
-
-    // Se enviou arquivo, processa a imagem
     $imagemPath = null;
 
     // Se enviou arquivo, processa a imagem
@@ -134,10 +146,6 @@ function editarProduto($db, $id, $nome, $modelo, $cor, $quantidade, $imagemFile 
     return ['status' => 'success', 'msg' => "Produto atualizado com sucesso."];
 }
 
-
-
-$db = conectarBanco();
-
 // Processar exclusão se for admin
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isAdmin && isset($_POST['excluir_id'])) {
     deletarProduto($db, (int)$_POST['excluir_id']);
@@ -145,25 +153,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isAdmin && isset($_POST['excluir_i
     exit();
 }
 
-$produtos = buscarProdutos($db);
+// Processar edição se for admin
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'editar' && $isAdmin) {
+    header('Content-Type: application/json; charset=utf-8');  // Cabeçalho JSON para resposta AJAX
 
-$editar_id = $_POST['editar_id'] ?? null;
-$atualizar_id = $_POST['atualizar_id'] ?? null;
+    // Recebe os dados da edição
+    $id = $_POST['id'] ?? null;
+    $nome = trim($_POST['nome'] ?? '');
+    $modelo = trim($_POST['modelo'] ?? '');
+    $cor = trim($_POST['cor'] ?? '');
+    $quantidade = intval($_POST['quantidade'] ?? 0);
+    $imagemFile = $_FILES['imagem'] ?? null;
+
+    if (!$id) {
+        echo json_encode(['status' => 'error', 'msg' => 'ID do produto ausente.']);
+        exit;
+    }
+
+    $resultado = editarProduto($db, $id, $nome, $modelo, $cor, $quantidade, $imagemFile);
+    echo json_encode($resultado);
+    exit;
+}
+
+$produtos = buscarProdutos($db);
 $mensagem = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isAdmin && $atualizar_id) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isAdmin && isset($_POST['atualizar_id'])) {
+    $atualizar_id = $_POST['atualizar_id'];
     $novoNome = trim($_POST['novo_nome']);
     $novoModelo = trim($_POST['novo_modelo']);
     $novaCor = trim($_POST['nova_cor']);
     $novaQtd = (int)$_POST['nova_quantidade'];
 
     $mensagem = editarProduto($db, $atualizar_id, $novoNome, $novoModelo, $novaCor, $novaQtd);
-    $editar_id = null; // fecha o modo de edição após salvar
 }
 
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -174,27 +199,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isAdmin && $atualizar_id) {
     <title>Produtos</title>
     <link rel="stylesheet" href="../styles/produtos.css">
     <link rel="stylesheet" href="../styles/navbar.css">
-
-</head>
-
-<!DOCTYPE html>
-<html lang="pt-br">
-
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Produtos</title>
-    <link rel="stylesheet" href="../styles/produtos.css" />
 </head>
 
 <body>
-    <?php
-    include_once '../components/navbar.php';
-    ?>
+    <?php include_once '../components/navbar.php'; ?>
     <h1>Produtos Cadastrados</h1>
+
     <?php if ($mensagem): ?>
         <p style="color: green; font-weight: bold;"><?= htmlspecialchars($mensagem) ?></p>
     <?php endif; ?>
+
+    <form method="get" style="margin-bottom: 20px;">
+        <label for="filtro">Buscar por nome:</label>
+        <input type="text" id="filtro" name="filtro" value="<?= htmlspecialchars($_GET['filtro'] ?? '') ?>">
+
+        <label for="ordenar">Ordenar por:</label>
+        <select name="ordenar" id="ordenar">
+            <option value="">-- Selecione --</option>
+            <option value="az" <?= ($_GET['ordenar'] ?? '') === 'az' ? 'selected' : '' ?>>Nome A-Z</option>
+            <option value="za" <?= ($_GET['ordenar'] ?? '') === 'za' ? 'selected' : '' ?>>Nome Z-A</option>
+            <option value="novo" <?= ($_GET['ordenar'] ?? '') === 'novo' ? 'selected' : '' ?>>Mais novo</option>
+            <option value="antigo" <?= ($_GET['ordenar'] ?? '') === 'antigo' ? 'selected' : '' ?>>Mais antigo</option>
+            <option value="maior_qtd" <?= ($_GET['ordenar'] ?? '') === 'maior_qtd' ? 'selected' : '' ?>>Maior quantidade</option>
+            <option value="menor_qtd" <?= ($_GET['ordenar'] ?? '') === 'menor_qtd' ? 'selected' : '' ?>>Menor quantidade</option>
+        </select>
+
+        <button type="submit">Filtrar</button>
+    </form>
 
     <?php if (empty($produtos)): ?>
         <p>Nenhum produto cadastrado.</p>
@@ -266,7 +297,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isAdmin && $atualizar_id) {
                         method: 'POST',
                         body: formData
                     })
-                    .then(response => response.json()) // *** [2] Correto parse do JSON ***
+                    .then(response => response.json())
                     .then(data => {
                         const msgDiv = form.querySelector('.msg-resultado');
                         if (data.status === 'success') {
@@ -315,6 +346,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isAdmin && $atualizar_id) {
         });
     </script>
 </body>
-
 
 </html>

@@ -1,11 +1,11 @@
 <?php
-session_start();
-
-if (!isset($_SESSION['user_id'])) {
-    echo "<script>alert('Você precisa estar logado para acessar esta página!');</script>";
-    header("Refresh: 0;url=./login/login.php");
-    exit();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
+require_once "../scripts/funcLogin.php";
+
+verificarSeEstaLogado("Deslogado");
+
 // para ver outras informações do usuário, acessa o arquivo login/login.php, a partir da linha 40
 ?>
 <!DOCTYPE html>

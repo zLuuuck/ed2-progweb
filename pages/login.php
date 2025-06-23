@@ -3,59 +3,20 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-session_start();
-
-if (isset($_SESSION['user_id'])) {
-    echo "<script>alert('Você já está logado!');</script>";
-    header("Refresh: 0; url=./index.php");
-    exit(); 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
 
-function conectarBanco()
-{
-    try {
-        $db = new PDO('sqlite:../db/login.db');
-        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        return $db;
-    } catch (PDOException $e) {
-        die("Erro ao conectar ao banco de dados: " . $e->getMessage());
-    }
-}
+require_once "../scripts/conectarBanco.php";
+require_once "../scripts/funcLogin.php";
+verificarSeEstaLogado('Logado');
 
 $mensagem = '';
-$mensagem_cor = 'darkred';
-
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $username = trim($_POST['username']) ?? '';
-    $password = $_POST['password'] ?? '';
-
-    $db = conectarBanco();
-
-    // Verifica se o usuário existe
-    $stmt = $db->prepare("SELECT * FROM login WHERE username = :username");
-    $stmt->bindParam(':username', $username);
-    $stmt->execute();
-    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($usuario && password_verify($password, $usuario['password'])) {
-        $_SESSION['user_id'] = $usuario['id'];
-        $_SESSION['username'] = $usuario['username'];
-        $_SESSION['nome'] = $usuario['nome'];
-        $_SESSION['email'] = $usuario['email'];
-        $_SESSION['birth'] = $usuario['birth'];
-        $mensagem = "✅ Login realizado com sucesso! Redirecionando. . .";
-        $mensagem_cor = "green";
-        header("Refresh: 2; url=./index.php");
-    } else {
-        $mensagem = "⚠️ Usuário ou senha incorretos.";
-        $mensagem_cor = "red";
-    }
-} else {
-    $mensagem = "";
-    $mensagem_cor = "black";
+    $mensagem = login();
 }
-?>
 
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -77,7 +38,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <h1>Login</h1>
         <!-- Mostrando a mensagem de erro ou sucesso ~ Lucas -->
         <?php if ($_SERVER["REQUEST_METHOD"] === "POST" && $mensagem): ?>
-            <p style="color: <?= $mensagem_cor ?>; font-weight: bold;"><?= $mensagem ?></p>
+            <?= $mensagem ?>
+            <?php if (strpos($mensagem, 'sucesso') !== false || strpos($mensagem, 'logado') !== false): ?>
+                <script>
+                    setTimeout(() => {
+                        window.location.href = './index.php';
+                    }, 3000)
+                </script>
+            <?php endif; ?>
         <?php endif; ?>
 
         <form action="login.php" method="post">
