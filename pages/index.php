@@ -24,7 +24,7 @@ if (session_status() === PHP_SESSION_NONE) {
         <div class="welcome-box">
             <h1>Bem vindo ao Guri Games!</h1>
             <p>Este é nosso site!</p>
-            <a href="../produtos.php" class="cta-button">Ver Produtos</a>
+            <a href="./produtos.php" class="cta-button">Ver Produtos</a>
         </div>
     </main>
 
