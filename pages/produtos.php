@@ -77,13 +77,26 @@ function editarProduto($db, $id, $nome, $modelo, $cor, $quantidade, $imagemFile 
 
     // Se enviou arquivo, processa a imagem
     if ($imagemFile && $imagemFile['error'] === UPLOAD_ERR_OK) {
-        $extensoesValidas = ['jpg', 'jpeg', 'png', 'gif'];
-        $nomeArquivo = basename($imagemFile['name']);
-        $ext = strtolower(pathinfo($nomeArquivo, PATHINFO_EXTENSION));
+        // Verificar tipo MIME real da imagem
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $mime = $finfo->file($imagemFile['tmp_name']);
+        $tiposPermitidos = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
-        if (!in_array($ext, $extensoesValidas)) {
-            return ['status' => 'error', 'msg' => "Tipo de imagem inválido."];
+        if (!in_array($mime, $tiposPermitidos)) {
+            return ['status' => 'error', 'msg' => "Tipo de imagem inválido. Use JPG, PNG, GIF ou WEBP."];
         }
+
+        // Verificar se é uma imagem válida
+        if (!getimagesize($imagemFile['tmp_name'])) {
+            return ['status' => 'error', 'msg' => "Arquivo enviado não é uma imagem válida."];
+        }
+
+        // Verificar tamanho (máx. 2MB)
+        $tamanhoMaxMB = 2;
+        if ($imagemFile['size'] > $tamanhoMaxMB * 1024 * 1024) {
+            return ['status' => 'error', 'msg' => "Imagem muito grande. Máximo de {$tamanhoMaxMB}MB."];
+        }
+
 
         // Cria pasta uploads se não existir
         if (!is_dir('./uploads')) {

@@ -82,7 +82,7 @@ function salvarImagem($arquivo)
     $ext = strtolower(pathinfo($arquivo['name'], PATHINFO_EXTENSION));
     if (!in_array($ext, $permitidas)) return "Extensão de imagem inválida.";
 
-    $dir = './uploads/';
+    $dir = __DIR__ . '/uploads/';
     if (!is_dir($dir)) mkdir($dir, 0777, true);
 
     $nomeSeguro = uniqid('produto_', true) . "." . $ext;
