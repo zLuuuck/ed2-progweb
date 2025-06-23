@@ -76,48 +76,48 @@ function editarProduto($db, $id, $nome, $modelo, $cor, $quantidade, $imagemFile 
     $imagemPath = null;
 
     // Se enviou arquivo, processa a imagem
-$imagemPath = null;
+    $imagemPath = null;
 
-// Se enviou arquivo, processa a imagem
-if ($imagemFile && $imagemFile['error'] === UPLOAD_ERR_OK) {
-    $finfo = new finfo(FILEINFO_MIME_TYPE);
-    $mime = $finfo->file($imagemFile['tmp_name']);
-    $tiposPermitidos = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    // Se enviou arquivo, processa a imagem
+    if ($imagemFile && $imagemFile['error'] === UPLOAD_ERR_OK) {
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $mime = $finfo->file($imagemFile['tmp_name']);
+        $tiposPermitidos = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
-    if (!in_array($mime, $tiposPermitidos)) {
-        return ['status' => 'error', 'msg' => "Tipo de imagem inválido. Use JPG, PNG, GIF ou WEBP."];
+        if (!in_array($mime, $tiposPermitidos)) {
+            return ['status' => 'error', 'msg' => "Tipo de imagem inválido. Use JPG, PNG, GIF ou WEBP."];
+        }
+
+        if (!getimagesize($imagemFile['tmp_name'])) {
+            return ['status' => 'error', 'msg' => "Arquivo enviado não é uma imagem válida."];
+        }
+
+        $tamanhoMaxMB = 2;
+        if ($imagemFile['size'] > $tamanhoMaxMB * 1024 * 1024) {
+            return ['status' => 'error', 'msg' => "Imagem muito grande. Máximo de {$tamanhoMaxMB}MB."];
+        }
+
+        // Criar pasta, gerar nome seguro e salvar
+        if (!is_dir('./uploads')) {
+            mkdir('./uploads', 0777, true);
+        }
+
+        $ext = pathinfo($imagemFile['name'], PATHINFO_EXTENSION);
+        $novoNome = 'uploads/produto_' . $id . '_' . time() . '.' . strtolower($ext);
+        if (!move_uploaded_file($imagemFile['tmp_name'], $novoNome)) {
+            return ['status' => 'error', 'msg' => "Falha ao mover a imagem."];
+        }
+
+        // Apaga a imagem antiga
+        $stmt = $db->prepare("SELECT imagem FROM produtos WHERE id = ?");
+        $stmt->execute([$id]);
+        $antiga = $stmt->fetchColumn();
+        if ($antiga && file_exists($antiga)) {
+            unlink($antiga);
+        }
+
+        $imagemPath = $novoNome;
     }
-
-    if (!getimagesize($imagemFile['tmp_name'])) {
-        return ['status' => 'error', 'msg' => "Arquivo enviado não é uma imagem válida."];
-    }
-
-    $tamanhoMaxMB = 2;
-    if ($imagemFile['size'] > $tamanhoMaxMB * 1024 * 1024) {
-        return ['status' => 'error', 'msg' => "Imagem muito grande. Máximo de {$tamanhoMaxMB}MB."];
-    }
-
-    // Criar pasta, gerar nome seguro e salvar
-    if (!is_dir('./uploads')) {
-        mkdir('./uploads', 0777, true);
-    }
-
-    $ext = pathinfo($imagemFile['name'], PATHINFO_EXTENSION);
-    $novoNome = 'uploads/produto_' . $id . '_' . time() . '.' . strtolower($ext);
-    if (!move_uploaded_file($imagemFile['tmp_name'], $novoNome)) {
-        return ['status' => 'error', 'msg' => "Falha ao mover a imagem."];
-    }
-
-    // Apaga a imagem antiga
-    $stmt = $db->prepare("SELECT imagem FROM produtos WHERE id = ?");
-    $stmt->execute([$id]);
-    $antiga = $stmt->fetchColumn();
-    if ($antiga && file_exists($antiga)) {
-        unlink($antiga);
-    }
-
-    $imagemPath = $novoNome;
-}
 
     // Monta SQL com ou sem imagem
     if ($imagemPath) {
@@ -206,12 +206,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isAdmin && $atualizar_id) {
                     <p><strong>Modelo:</strong> <?= htmlspecialchars($produto['modelo']) ?></p>
                     <p><strong>Cor:</strong> <?= htmlspecialchars($produto['cor']) ?></p>
                     <p><strong>Quantidade:</strong> <?= $produto['quantidade'] ?></p>
-                    <?php if (!empty($produto['imagem']) && file_exists($produto['imagem'])): ?>
+                    <?php if (!empty($produto['imagem'])): ?>
                         <img src="<?= htmlspecialchars($produto['imagem']) ?>" alt="Imagem do produto" width="150" />
                     <?php else: ?>
                         <p><em>Imagem não disponível</em></p>
                     <?php endif; ?>
-
                     <?php if ($isAdmin): ?>
                         <button class="btn-editar">Editar</button>
                         <form method="post" action="" style="display:inline;" onsubmit="return confirm('Deseja excluir?');">
@@ -220,7 +219,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isAdmin && $atualizar_id) {
                         </form>
                     <?php endif; ?>
                 </div>
-
                 <?php if ($isAdmin): ?>
                     <form class="edit-mode" style="display:none;" enctype="multipart/form-data">
                         <input type="hidden" name="id" value="<?= $produto['id'] ?>" />
