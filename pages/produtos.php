@@ -160,6 +160,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isAdmin && $atualizar_id) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Produtos</title>
     <link rel="stylesheet" href="../styles/produtos.css">
+    <link rel="stylesheet" href="../styles/navbar.css">
+
 </head>
 
 <!DOCTYPE html>
@@ -173,6 +175,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isAdmin && $atualizar_id) {
 </head>
 
 <body>
+    <?php
+    include_once '../components/navbar.php';
+    ?>
     <h1>Produtos Cadastrados</h1>
     <?php if ($mensagem): ?>
         <p style="color: green; font-weight: bold;"><?= htmlspecialchars($mensagem) ?></p>
@@ -247,54 +252,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isAdmin && $atualizar_id) {
                 formData.append('action', 'editar'); // necessário para o PHP saber que é edição
 
                 fetch('produtos.php', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json()) // *** [2] Correto parse do JSON ***
-                .then(data => {
-                    const msgDiv = form.querySelector('.msg-resultado');
-                    if (data.status === 'success') {
-                        msgDiv.style.color = 'green';
-                        msgDiv.textContent = data.msg;
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json()) // *** [2] Correto parse do JSON ***
+                    .then(data => {
+                        const msgDiv = form.querySelector('.msg-resultado');
+                        if (data.status === 'success') {
+                            msgDiv.style.color = 'green';
+                            msgDiv.textContent = data.msg;
 
-                        // Atualiza view-mode com os dados editados
-                        const produtoDiv = form.closest('.produto');
-                        produtoDiv.querySelector('.view-mode h3').textContent = form.nome.value;
-                        produtoDiv.querySelector('.view-mode p:nth-of-type(1)').innerHTML = `<strong>Modelo:</strong> ${form.modelo.value}`;
-                        produtoDiv.querySelector('.view-mode p:nth-of-type(2)').innerHTML = `<strong>Cor:</strong> ${form.cor.value}`;
-                        produtoDiv.querySelector('.view-mode p:nth-of-type(3)').innerHTML = `<strong>Quantidade:</strong> ${form.quantidade.value}`;
+                            // Atualiza view-mode com os dados editados
+                            const produtoDiv = form.closest('.produto');
+                            produtoDiv.querySelector('.view-mode h3').textContent = form.nome.value;
+                            produtoDiv.querySelector('.view-mode p:nth-of-type(1)').innerHTML = `<strong>Modelo:</strong> ${form.modelo.value}`;
+                            produtoDiv.querySelector('.view-mode p:nth-of-type(2)').innerHTML = `<strong>Cor:</strong> ${form.cor.value}`;
+                            produtoDiv.querySelector('.view-mode p:nth-of-type(3)').innerHTML = `<strong>Quantidade:</strong> ${form.quantidade.value}`;
 
-                        // Atualiza imagem se nova for enviada
-                        if (form.imagem.files.length > 0) {
-                            const reader = new FileReader();
-                            reader.onload = function(e) {
-                                let img = produtoDiv.querySelector('.view-mode img');
-                                if (!img) {
-                                    img = document.createElement('img');
-                                    img.width = 150;
-                                    produtoDiv.querySelector('.view-mode').appendChild(img);
+                            // Atualiza imagem se nova for enviada
+                            if (form.imagem.files.length > 0) {
+                                const reader = new FileReader();
+                                reader.onload = function(e) {
+                                    let img = produtoDiv.querySelector('.view-mode img');
+                                    if (!img) {
+                                        img = document.createElement('img');
+                                        img.width = 150;
+                                        produtoDiv.querySelector('.view-mode').appendChild(img);
+                                    }
+                                    img.src = e.target.result;
                                 }
-                                img.src = e.target.result;
+                                reader.readAsDataURL(form.imagem.files[0]);
                             }
-                            reader.readAsDataURL(form.imagem.files[0]);
-                        }
 
-                        // Fecha o modo edição após 1.5s
-                        setTimeout(() => {
-                            form.style.display = 'none';
-                            produtoDiv.querySelector('.view-mode').style.display = 'block';
-                            msgDiv.textContent = '';
-                        }, 1500);
-                    } else {
+                            // Fecha o modo edição após 1.5s
+                            setTimeout(() => {
+                                form.style.display = 'none';
+                                produtoDiv.querySelector('.view-mode').style.display = 'block';
+                                msgDiv.textContent = '';
+                            }, 1500);
+                        } else {
+                            msgDiv.style.color = 'red';
+                            msgDiv.textContent = data.msg;
+                        }
+                    })
+                    .catch(() => {
+                        const msgDiv = form.querySelector('.msg-resultado');
                         msgDiv.style.color = 'red';
-                        msgDiv.textContent = data.msg;
-                    }
-                })
-                .catch(() => {
-                    const msgDiv = form.querySelector('.msg-resultado');
-                    msgDiv.style.color = 'red';
-                    msgDiv.textContent = 'Erro na comunicação com o servidor.';
-                });
+                        msgDiv.textContent = 'Erro na comunicação com o servidor.';
+                    });
             });
         });
     </script>

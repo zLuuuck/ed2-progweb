@@ -9,10 +9,16 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>testes</title>
     <link rel="stylesheet" href="../styles/index.css">
+    <link rel="stylesheet" href="../styles/navbar.css">
 </head>
 
 <body>
-    <h1>Home</h1>
+
+<?php
+include_once '../components/navbar.php';
+?>
+
+<h1>Home</h1>
     
     <?php
     echo "<p>Hello, World!</p>";
@@ -44,6 +50,9 @@ session_start();
     <a href="./login/login.php"><button>Login</button></a><br>
     <a href="./login/registro.php"><button>Registro</button></a><br>
 
+    <?php
+    include_once '../components/footer.php';
+    ?>
 </body>
 
 </html>
