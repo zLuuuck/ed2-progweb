@@ -7,11 +7,11 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-verificarSeEstaLogado('Logado');
 
 // Função para conectar ao banco de dados SQLite e criar a tabela se não existir ~Lucas
 require_once "../scripts/conectarBanco.php";
 require_once "../scripts/funcLogin.php";
+verificarSeEstaLogado('Logado');
 
 // Função para validar os dados do formulário de cadastro ~Lucas
 $mensagem = '';

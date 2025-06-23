@@ -11,6 +11,7 @@ $isAdmin = isset($_SESSION['user_id']) && $_SESSION['user_id'] === 1;
 require_once '../scripts/conectarBanco.php';
 require_once '../scripts/func_produtos.php';
 
+
 $db = conectarBanco('produtos');
 
 function buscarProdutos($db)
@@ -185,7 +186,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isAdmin && isset($_POST['atualizar
     $novaCor = trim($_POST['nova_cor']);
     $novaQtd = (int)$_POST['nova_quantidade'];
 
-    $mensagem = editarProduto($db, $atualizar_id, $novoNome, $novoModelo, $novaCor, $novaQtd);
+    $resultado = editarProduto($db, $atualizar_id, $novoNome, $novoModelo, $novaCor, $novaQtd);
+    if ($resultado['status'] === 'success') {
+        $mensagem = mensagem($resultado['msg'], 'success');
+    } else {
+        $mensagem = mensagem($resultado['msg'], 'error');
+    }
 }
 
 ?>
@@ -206,7 +212,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isAdmin && isset($_POST['atualizar
     <h1>Produtos Cadastrados</h1>
 
     <?php if ($mensagem): ?>
-        <p style="color: green; font-weight: bold;"><?= htmlspecialchars($mensagem) ?></p>
+        <?= $mensagem; ?>
     <?php endif; ?>
 
     <form method="get" style="margin-bottom: 20px;">
@@ -260,7 +266,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isAdmin && isset($_POST['atualizar
                         <label>Imagem: <input type="file" name="imagem" accept="image/*" /></label><br />
                         <button type="submit">Salvar</button>
                         <button type="button" class="btn-cancelar">Cancelar</button>
-                        <div class="msg-resultado" style="color:red; font-weight:bold;"></div>
+                        <div class="msg-resultado"></div>
                     </form>
                 <?php endif; ?>
             </div>
@@ -288,60 +294,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isAdmin && isset($_POST['atualizar
         // Enviar formulário de edição via AJAX
         document.querySelectorAll('.edit-mode').forEach(form => {
             form.addEventListener('submit', e => {
-                e.preventDefault();
+                    e.preventDefault();
 
-                const formData = new FormData(form);
-                formData.append('action', 'editar'); // necessário para o PHP saber que é edição
+                    const formData = new FormData(form);
+                    formData.append('action', 'editar'); // necessário para o PHP saber que é edição
 
-                fetch('produtos.php', {
-                        method: 'POST',
-                        body: formData
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        const msgDiv = form.querySelector('.msg-resultado');
-                        if (data.status === 'success') {
-                            msgDiv.style.color = 'green';
-                            msgDiv.textContent = data.msg;
+                    fetch('produtos.php', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                                const msgDiv = form.querySelector('.msg-resultado');
+                                msgDiv.className = '';
+                                msgDiv.classList.add(data.status === 'success' ? 'mensagem-sucesso' : 'mensagem-erro');
+                                msgDiv.innerHTML = data.msg;
+                                if (data.status === 'success') {
+                                    const produtoDiv = form.closest('.produto');
+                                    produtoDiv.querySelector('.view-mode h3').textContent = form.nome.value;
+                                    produtoDiv.querySelector('.view-mode p:nth-of-type(1)').innerHTML = `<strong>Modelo:</strong> ${form.modelo.value}`;
+                                    produtoDiv.querySelector('.view-mode p:nth-of-type(2)').innerHTML = `<strong>Cor:</strong> ${form.cor.value}`;
+                                    produtoDiv.querySelector('.view-mode p:nth-of-type(3)').innerHTML = `<strong>Quantidade:</strong> ${form.quantidade.value}`;
 
-                            // Atualiza view-mode com os dados editados
-                            const produtoDiv = form.closest('.produto');
-                            produtoDiv.querySelector('.view-mode h3').textContent = form.nome.value;
-                            produtoDiv.querySelector('.view-mode p:nth-of-type(1)').innerHTML = `<strong>Modelo:</strong> ${form.modelo.value}`;
-                            produtoDiv.querySelector('.view-mode p:nth-of-type(2)').innerHTML = `<strong>Cor:</strong> ${form.cor.value}`;
-                            produtoDiv.querySelector('.view-mode p:nth-of-type(3)').innerHTML = `<strong>Quantidade:</strong> ${form.quantidade.value}`;
-
-                            // Atualiza imagem se nova for enviada
-                            if (form.imagem.files.length > 0) {
-                                const reader = new FileReader();
-                                reader.onload = function(e) {
-                                    let img = produtoDiv.querySelector('.view-mode img');
-                                    if (!img) {
-                                        img = document.createElement('img');
-                                        img.width = 150;
-                                        produtoDiv.querySelector('.view-mode').appendChild(img);
+                                    if (form.imagem.files.length > 0) {
+                                        const reader = new FileReader();
+                                        reader.onload = function(e) {
+                                            let img = produtoDiv.querySelector('.view-mode img');
+                                            if (!img) {
+                                                img = document.createElement('img');
+                                                img.width = 150;
+                                                produtoDiv.querySelector('.view-mode').appendChild(img);
+                                            }
+                                            img.src = e.target.result;
+                                        }
+                                        reader.readAsDataURL(form.imagem.files[0]);
                                     }
-                                    img.src = e.target.result;
-                                }
-                                reader.readAsDataURL(form.imagem.files[0]);
-                            }
 
-                            // Fecha o modo edição após 1.5s
-                            setTimeout(() => {
-                                form.style.display = 'none';
-                                produtoDiv.querySelector('.view-mode').style.display = 'block';
-                                msgDiv.textContent = '';
-                            }, 1500);
-                        } else {
-                            msgDiv.style.color = 'red';
-                            msgDiv.textContent = data.msg;
-                        }
-                    })
-                    .catch(() => {
-                        const msgDiv = form.querySelector('.msg-resultado');
-                        msgDiv.style.color = 'red';
-                        msgDiv.textContent = 'Erro na comunicação com o servidor.';
-                    });
+                                    setTimeout(() => {
+                                        form.style.display = 'none';
+                                        produtoDiv.querySelector('.view-mode').style.display = 'block';
+                                    }, 1500);
+
+                                    // Remove a mensagem e a classe após 3 segundos
+                                    setTimeout(() => {
+                                        msgDiv.textContent = '';
+                                        msgDiv.className = '';
+                                    }, 3000);
+
+                                }
+                            else {
+                                setTimeout(() => {
+                                    msgDiv.textContent = '';
+                                    msgDiv.className = '';
+                                }, 3000);
+                            }
+                        })
+                .catch(() => {
+                    const msgDiv = form.querySelector('.msg-resultado');
+                    msgDiv.className = '';
+                    msgDiv.classList.add('mensagem-erro');
+                    msgDiv.textContent = 'Erro na comunicação com o servidor.';
+                });
             });
         });
     </script>
