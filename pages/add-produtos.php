@@ -17,7 +17,7 @@ $quantidade = $_POST['quantidade'] ?? '';
 
 function conectarBanco()
 {
-    $db = new PDO('sqlite:../db/produtos.db');
+    $db = new PDO('sqlite:../db/database.db');
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $stmt = $db->query("SELECT name FROM sqlite_master WHERE type='table' AND name='produtos'");

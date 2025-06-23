@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 function conectarBanco()
 {
-    $db = new PDO('sqlite:../db/produtos.db');
+    $db = new PDO('sqlite:../db/database.db');
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     return $db;
 }

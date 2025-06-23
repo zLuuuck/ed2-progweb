@@ -12,7 +12,7 @@ if (isset($_SESSION['user_id'])) {
 // Função para conectar ao banco de dados SQLite e criar a tabela se não existir ~Lucas
 function conectarBanco()
 {
-    $db = new PDO('sqlite:../db/login.db');
+    $db = new PDO('sqlite:../db/database.db');
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $stmt = $db->query("SELECT name FROM sqlite_master WHERE type='table' AND name='login'");
@@ -115,7 +115,7 @@ function cadastrarUsuario($db, $username, $nome, $email, $birth, $password)
         $stmt->bindValue(':birth', $birth);
         $stmt->bindValue(':password', $senhaCriptografada);
         $stmt->execute();
-        return "sucess!";
+        return True;
     } catch (PDOException $e) {
         return "Erro ao cadastrar: " . $e->getMessage();
     }
@@ -142,7 +142,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $mensagem_cor = 'orange';
     } else {
         $resultadoCadastro = cadastrarUsuario($db, $username, $nome, $email, $birth, $password);
-        if ($resultadoCadastro === 'sucess') {
+        if ($resultadoCadastro === True) {
             $mensagem = "Cadastro realizado com sucesso! Redirecionando...";
             $mensagem_cor = 'green';
 
