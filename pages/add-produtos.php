@@ -64,20 +64,18 @@ function salvarImagem($arquivo)
     $ext = strtolower(pathinfo($arquivo['name'], PATHINFO_EXTENSION));
     if (!in_array($ext, $permitidas)) return "Extensão de imagem inválida.";
 
-    $uploadDir = dirname($_SERVER['SCRIPT_NAME']) . '/uploads/';
-    $uploadPath = __DIR__ . '/uploads/';
-
-    if (!is_dir($uploadPath)) mkdir($uploadPath, 0777, true);
+    $uploadDir = __DIR__ . '/../uploads/'; // Pasta fora de /pages
+    if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
 
     $nomeSeguro = uniqid('produto_', true) . "." . $ext;
-    $destinoAbsoluto = $uploadPath . $nomeSeguro;
-    $destinoRelativo = $uploadDir . $nomeSeguro;
+    $destinoAbsoluto = $uploadDir . $nomeSeguro;
 
     if (!move_uploaded_file($arquivo['tmp_name'], $destinoAbsoluto)) {
         return "Erro ao mover a imagem.";
     }
 
-    return $destinoRelativo;
+    // Caminho relativo para acesso via HTML a partir da pasta /pages
+    return '../uploads/' . $nomeSeguro;
 }
 
 function cadastrarProduto($db, $nome, $modelo, $cor, $quantidade, $imagemPath)

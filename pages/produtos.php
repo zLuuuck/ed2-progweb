@@ -91,7 +91,7 @@ function editarProduto($db, $id, $nome, $modelo, $cor, $quantidade, $imagemFile 
 
     $imagemPath = null;
 
-    // Se enviou arquivo, processa a imagem
+    // Se enviou nova imagem
     if ($imagemFile && $imagemFile['error'] === UPLOAD_ERR_OK) {
         $finfo = new finfo(FILEINFO_MIME_TYPE);
         $mime = $finfo->file($imagemFile['tmp_name']);
@@ -111,13 +111,17 @@ function editarProduto($db, $id, $nome, $modelo, $cor, $quantidade, $imagemFile 
         }
 
         // Criar pasta, gerar nome seguro e salvar
-        if (!is_dir('./uploads')) {
-            mkdir('./uploads', 0777, true);
+        $uploadDir = __DIR__ . '/../uploads/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
         }
 
-        $ext = pathinfo($imagemFile['name'], PATHINFO_EXTENSION);
-        $novoNome = 'uploads/produto_' . $id . '_' . time() . '.' . strtolower($ext);
-        if (!move_uploaded_file($imagemFile['tmp_name'], $novoNome)) {
+        $ext = strtolower(pathinfo($imagemFile['name'], PATHINFO_EXTENSION));
+        $nomeSeguro = 'produto_' . $id . '_' . time() . '.' . $ext;
+        $destinoAbsoluto = $uploadDir . $nomeSeguro;
+        $destinoRelativo = '../uploads/' . $nomeSeguro;
+
+        if (!move_uploaded_file($imagemFile['tmp_name'], $destinoAbsoluto)) {
             return ['status' => 'error', 'msg' => "Falha ao mover a imagem."];
         }
 
@@ -125,14 +129,23 @@ function editarProduto($db, $id, $nome, $modelo, $cor, $quantidade, $imagemFile 
         $stmt = $db->prepare("SELECT imagem FROM produtos WHERE id = ?");
         $stmt->execute([$id]);
         $antiga = $stmt->fetchColumn();
-        if ($antiga && file_exists($antiga)) {
-            unlink($antiga);
+
+        if ($antiga) {
+            // Remove '../' do começo se existir
+            $caminhoRelativo = ltrim($antiga, './'); // Remove './' e '../' se houver
+            $caminhoCompleto = realpath(__DIR__ . '/../' . $caminhoRelativo);
+
+            if ($caminhoCompleto && file_exists($caminhoCompleto)) {
+                unlink($caminhoCompleto);
+            } else {
+                error_log("Imagem antiga não encontrada para exclusão: $caminhoCompleto");
+            }
         }
 
-        $imagemPath = $novoNome;
+        $imagemPath = $destinoRelativo;
     }
 
-    // Monta SQL com ou sem imagem
+    // Monta SQL com ou sem nova imagem
     if ($imagemPath) {
         $sql = "UPDATE produtos SET nome = ?, modelo = ?, cor = ?, quantidade = ?, imagem = ? WHERE id = ?";
         $params = [$nome, $modelo, $cor, $quantidade, $imagemPath, $id];
@@ -213,15 +226,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isAdmin && isset($_POST['atualizar
     <main>
 
         <h1>Produtos Cadastrados</h1>
-    
+
         <?php if ($mensagem): ?>
             <?= $mensagem; ?>
         <?php endif; ?>
-    
+
         <form method="get" style="margin-bottom: 20px;">
             <label for="filtro">Buscar por nome:</label>
             <input type="text" id="filtro" name="filtro" value="<?= htmlspecialchars($_GET['filtro'] ?? '') ?>">
-    
+
             <label for="ordenar">Ordenar por:</label>
             <select name="ordenar" id="ordenar">
                 <option value="">-- Selecione --</option>
@@ -232,10 +245,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isAdmin && isset($_POST['atualizar
                 <option value="maior_qtd" <?= ($_GET['ordenar'] ?? '') === 'maior_qtd' ? 'selected' : '' ?>>Maior quantidade</option>
                 <option value="menor_qtd" <?= ($_GET['ordenar'] ?? '') === 'menor_qtd' ? 'selected' : '' ?>>Menor quantidade</option>
             </select>
-    
+
             <button type="submit">Filtrar</button>
         </form>
-    
+
         <?php if (empty($produtos)): ?>
             <p>Nenhum produto cadastrado.</p>
         <?php else: ?>
@@ -301,67 +314,66 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isAdmin && isset($_POST['atualizar
         // Enviar formulário de edição via AJAX
         document.querySelectorAll('.edit-mode').forEach(form => {
             form.addEventListener('submit', e => {
-                    e.preventDefault();
+                e.preventDefault();
 
-                    const formData = new FormData(form);
-                    formData.append('action', 'editar'); // necessário para o PHP saber que é edição
+                const formData = new FormData(form);
+                formData.append('action', 'editar'); // necessário para o PHP saber que é edição
 
-                    fetch('produtos.php', {
-                            method: 'POST',
-                            body: formData
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                                const msgDiv = form.querySelector('.msg-resultado');
-                                msgDiv.className = '';
-                                msgDiv.classList.add(data.status === 'success' ? 'mensagem-sucesso' : 'mensagem-erro');
-                                msgDiv.innerHTML = data.msg;
-                                if (data.status === 'success') {
-                                    const produtoDiv = form.closest('.produto');
-                                    produtoDiv.querySelector('.view-mode h3').textContent = form.nome.value;
-                                    produtoDiv.querySelector('.view-mode p:nth-of-type(1)').innerHTML = `<strong>Modelo:</strong> ${form.modelo.value}`;
-                                    produtoDiv.querySelector('.view-mode p:nth-of-type(2)').innerHTML = `<strong>Cor:</strong> ${form.cor.value}`;
-                                    produtoDiv.querySelector('.view-mode p:nth-of-type(3)').innerHTML = `<strong>Quantidade:</strong> ${form.quantidade.value}`;
+                fetch('produtos.php', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        const msgDiv = form.querySelector('.msg-resultado');
+                        msgDiv.className = '';
+                        msgDiv.classList.add(data.status === 'success' ? 'mensagem-sucesso' : 'mensagem-erro');
+                        msgDiv.innerHTML = data.msg;
+                        if (data.status === 'success') {
+                            const produtoDiv = form.closest('.produto');
+                            produtoDiv.querySelector('.view-mode h3').textContent = form.nome.value;
+                            produtoDiv.querySelector('.view-mode p:nth-of-type(1)').innerHTML = `<strong>Modelo:</strong> ${form.modelo.value}`;
+                            produtoDiv.querySelector('.view-mode p:nth-of-type(2)').innerHTML = `<strong>Cor:</strong> ${form.cor.value}`;
+                            produtoDiv.querySelector('.view-mode p:nth-of-type(3)').innerHTML = `<strong>Quantidade:</strong> ${form.quantidade.value}`;
 
-                                    if (form.imagem.files.length > 0) {
-                                        const reader = new FileReader();
-                                        reader.onload = function(e) {
-                                            let img = produtoDiv.querySelector('.view-mode img');
-                                            if (!img) {
-                                                img = document.createElement('img');
-                                                img.width = 150;
-                                                produtoDiv.querySelector('.view-mode').appendChild(img);
-                                            }
-                                            img.src = e.target.result;
-                                        }
-                                        reader.readAsDataURL(form.imagem.files[0]);
+                            if (form.imagem.files.length > 0) {
+                                const reader = new FileReader();
+                                reader.onload = function(e) {
+                                    let img = produtoDiv.querySelector('.view-mode img');
+                                    if (!img) {
+                                        img = document.createElement('img');
+                                        img.width = 150;
+                                        produtoDiv.querySelector('.view-mode').appendChild(img);
                                     }
-
-                                    setTimeout(() => {
-                                        form.style.display = 'none';
-                                        produtoDiv.querySelector('.view-mode').style.display = 'block';
-                                    }, 1500);
-
-                                    // Remove a mensagem e a classe após 3 segundos
-                                    setTimeout(() => {
-                                        msgDiv.textContent = '';
-                                        msgDiv.className = '';
-                                    }, 3000);
-
+                                    img.src = e.target.result;
                                 }
-                            else {
-                                setTimeout(() => {
-                                    msgDiv.textContent = '';
-                                    msgDiv.className = '';
-                                }, 3000);
+                                reader.readAsDataURL(form.imagem.files[0]);
                             }
-                        })
-                .catch(() => {
-                    const msgDiv = form.querySelector('.msg-resultado');
-                    msgDiv.className = '';
-                    msgDiv.classList.add('mensagem-erro');
-                    msgDiv.textContent = 'Erro na comunicação com o servidor.';
-                });
+
+                            setTimeout(() => {
+                                form.style.display = 'none';
+                                produtoDiv.querySelector('.view-mode').style.display = 'block';
+                            }, 1500);
+
+                            // Remove a mensagem e a classe após 3 segundos
+                            setTimeout(() => {
+                                msgDiv.textContent = '';
+                                msgDiv.className = '';
+                            }, 3000);
+
+                        } else {
+                            setTimeout(() => {
+                                msgDiv.textContent = '';
+                                msgDiv.className = '';
+                            }, 3000);
+                        }
+                    })
+                    .catch(() => {
+                        const msgDiv = form.querySelector('.msg-resultado');
+                        msgDiv.className = '';
+                        msgDiv.classList.add('mensagem-erro');
+                        msgDiv.textContent = 'Erro na comunicação com o servidor.';
+                    });
             });
         });
     </script>
