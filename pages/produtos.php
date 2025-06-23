@@ -76,48 +76,48 @@ function editarProduto($db, $id, $nome, $modelo, $cor, $quantidade, $imagemFile 
     $imagemPath = null;
 
     // Se enviou arquivo, processa a imagem
-    if ($imagemFile && $imagemFile['error'] === UPLOAD_ERR_OK) {
-        // Verificar tipo MIME real da imagem
-        $finfo = new finfo(FILEINFO_MIME_TYPE);
-        $mime = $finfo->file($imagemFile['tmp_name']);
-        $tiposPermitidos = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+$imagemPath = null;
 
-        if (!in_array($mime, $tiposPermitidos)) {
-            return ['status' => 'error', 'msg' => "Tipo de imagem inválido. Use JPG, PNG, GIF ou WEBP."];
-        }
+// Se enviou arquivo, processa a imagem
+if ($imagemFile && $imagemFile['error'] === UPLOAD_ERR_OK) {
+    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    $mime = $finfo->file($imagemFile['tmp_name']);
+    $tiposPermitidos = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
-        // Verificar se é uma imagem válida
-        if (!getimagesize($imagemFile['tmp_name'])) {
-            return ['status' => 'error', 'msg' => "Arquivo enviado não é uma imagem válida."];
-        }
-
-        // Verificar tamanho (máx. 2MB)
-        $tamanhoMaxMB = 2;
-        if ($imagemFile['size'] > $tamanhoMaxMB * 1024 * 1024) {
-            return ['status' => 'error', 'msg' => "Imagem muito grande. Máximo de {$tamanhoMaxMB}MB."];
-        }
-
-
-        // Cria pasta uploads se não existir
-        if (!is_dir('./uploads')) {
-            mkdir('./uploads', 0777, true);
-        }
-
-        $novoNome = 'uploads/produto_' . $id . '_' . time() . '.' . $ext;
-        if (!move_uploaded_file($imagemFile['tmp_name'], $novoNome)) {
-            return ['status' => 'error', 'msg' => "Falha ao enviar imagem."];
-        }
-
-        // Apaga a imagem antiga, se existir
-        $stmt = $db->prepare("SELECT imagem FROM produtos WHERE id = ?");
-        $stmt->execute([$id]);
-        $antiga = $stmt->fetchColumn();
-        if ($antiga && file_exists($antiga)) {
-            unlink($antiga);
-        }
-
-        $imagemPath = $novoNome;
+    if (!in_array($mime, $tiposPermitidos)) {
+        return ['status' => 'error', 'msg' => "Tipo de imagem inválido. Use JPG, PNG, GIF ou WEBP."];
     }
+
+    if (!getimagesize($imagemFile['tmp_name'])) {
+        return ['status' => 'error', 'msg' => "Arquivo enviado não é uma imagem válida."];
+    }
+
+    $tamanhoMaxMB = 2;
+    if ($imagemFile['size'] > $tamanhoMaxMB * 1024 * 1024) {
+        return ['status' => 'error', 'msg' => "Imagem muito grande. Máximo de {$tamanhoMaxMB}MB."];
+    }
+
+    // Criar pasta, gerar nome seguro e salvar
+    if (!is_dir('./uploads')) {
+        mkdir('./uploads', 0777, true);
+    }
+
+    $ext = pathinfo($imagemFile['name'], PATHINFO_EXTENSION);
+    $novoNome = 'uploads/produto_' . $id . '_' . time() . '.' . strtolower($ext);
+    if (!move_uploaded_file($imagemFile['tmp_name'], $novoNome)) {
+        return ['status' => 'error', 'msg' => "Falha ao mover a imagem."];
+    }
+
+    // Apaga a imagem antiga
+    $stmt = $db->prepare("SELECT imagem FROM produtos WHERE id = ?");
+    $stmt->execute([$id]);
+    $antiga = $stmt->fetchColumn();
+    if ($antiga && file_exists($antiga)) {
+        unlink($antiga);
+    }
+
+    $imagemPath = $novoNome;
+}
 
     // Monta SQL com ou sem imagem
     if ($imagemPath) {
