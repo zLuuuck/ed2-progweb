@@ -8,17 +8,19 @@
 
 html, body {
     height: 100%;
-    margin: 0;
+    background: linear-gradient(135deg, #2f0050, #7a22c7);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #f3e9ff;
 }
 
 /* Layout principal */
 body {
-    display: flex;
-    flex-direction: column;
     min-height: 100vh;
-    background: linear-gradient(135deg, #5E4AE3, #A76BA3);
-    color: white;
     overflow: auto;
+    padding: 20px;
 }
 
 /* Main centralizado */
@@ -34,19 +36,20 @@ main {
 
 /* Título principal */
 main h1 {
-    font-size: 3em;
+    font-size: 2.5em;
     margin-bottom: 30px;
     letter-spacing: 1px;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    color: #e3cfff;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
 }
 
 /* Caixa do formulário */
 #produto-form {
-    background: rgba(106, 90, 205, 0.95);
+    background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
     padding: 40px 30px;
-    border-radius: 25px;
-    box-shadow: 0 12px 45px rgba(0, 0, 0, 0.6);
+    border-radius: 20px;
+    box-shadow: 0 12px 45px rgba(0, 0, 0, 0.5);
     max-width: 500px;
     width: 100%;
     animation: fadeIn 0.8s ease-out;
@@ -54,8 +57,9 @@ main h1 {
 
 /* Subtítulo do formulário */
 #produto-form h1 {
-    font-size: 2em;
+    font-size: 1.8em;
     margin-bottom: 20px;
+    color: #d6b3ff;
 }
 
 /* Campos */
@@ -68,6 +72,7 @@ label {
     display: block;
     margin-bottom: 6px;
     font-weight: bold;
+    color: #d6b3ff;
 }
 
 input[type="text"],
@@ -76,10 +81,17 @@ input[type="file"] {
     width: 100%;
     padding: 10px;
     border-radius: 8px;
-    border: none;
+    border: 1px solid #b580ff;
     font-size: 1em;
-    background-color: #f0f0f0;
-    color: #333;
+    background-color: #f9f6ff;
+    color: #2d003d;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input:focus {
+    outline: none;
+    border-color: #a855f7;
+    box-shadow: 0 0 8px #a855f7aa;
 }
 
 /* Botão */
@@ -95,6 +107,8 @@ button[type="submit"] {
     border: 2px solid rgba(255, 255, 255, 0.2);
     cursor: pointer;
     box-shadow: 0 8px 20px rgba(140, 110, 255, 0.6);
+    width: 100%;
+    margin-top: 10px;
 }
 
 button[type="submit"]:hover {
@@ -107,13 +121,15 @@ button[type="submit"]:hover {
 p.mensagem {
     font-weight: bold;
     margin-bottom: 20px;
+    color: #ffe082;
+    text-align: center;
 }
 
-/* Footer compatível 
+/* Footer bonito e leve */
 footer {
     margin-top: auto;
     width: 100%;
-    background: rgba(106, 90, 205, 0.85);
+    background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
     border-radius: 0 0 20px 20px;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
@@ -121,7 +137,6 @@ footer {
     text-align: center;
     padding: 20px 15px;
 }
-*/
 
 /* Animação suave */
 @keyframes fadeIn {

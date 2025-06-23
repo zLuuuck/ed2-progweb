@@ -1,54 +1,99 @@
+/* Reset e base */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Arial, sans-serif;
 }
 
 html, body {
-  height: 100%;
-  margin: 0;
+    height: 100%;
+    background: linear-gradient(135deg, #32064b, #4d1588);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #f3e9ff;
 }
 
+/* Container do conteúdo */
 body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 20px;
 }
 
-
+/* Conteúdo principal */
 main {
-  flex: 1; /* conteúdo principal ocupa todo o espaço disponível */
-  padding: 20px;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
 }
 
+/* Formulário centralizado */
 #login-form {
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    padding: 40px 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(173, 131, 255, 0.2);
+    width: 100%;
     max-width: 400px;
-    margin: auto;
 }
 
+/* Labels e campos */
 .float-label {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #d6b3ff;
 }
 
 input {
     width: 100%;
-    padding: 8px;
-    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid #b580ff;
+    border-radius: 8px;
+    background-color: #f9f6ff;
+    color: #f10505;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
+input:focus {
+    outline: none;
+    border-color: #a855f7;
+    box-shadow: 0 0 8px #a855f7aa;
+}
+
+/* Botão de login */
 button {
-    padding: 10px 15px;
-    font-size: 16px;
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    font-weight: bold;
+    background-color: #7a22c7;
+    border: none;
+    border-radius: 10px;
+    color: white;
     cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
+button:hover {
+    background-color: #a855f7;
+    transform: scale(1.02);
+}
+
+/* Mensagem de erro ou sucesso */
 p.mensagem {
     font-weight: bold;
     margin-bottom: 20px;
+    color: #ffdb77;
+    text-align: center;
 }

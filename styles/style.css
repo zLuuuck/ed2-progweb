@@ -1,92 +1,172 @@
+/* Reset e fonte padrão */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 html, body {
     height: 100%;
-    margin: 0;
-}
-
-body {
+    background: linear-gradient(135deg, #2f0050, #7a22c7);
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
-    padding-bottom: 80px; /* espaço para footer */
-    background: linear-gradient(135deg, #5E4AE3, #A76BA3);
-    color: white;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    overflow: auto; /* para permitir scroll */
-}
-body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    padding-bottom: 0; /* pode deixar zero, não precisa do padding para o footer */
-}
-
-main {
-    flex: 1;
-    display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    color: #f3e9ff;
+}
+
+/* Layout principal */
+body {
+    min-height: 100vh;
+    overflow: auto;
     padding: 20px;
 }
 
-
-.welcome-box {
-    background: rgba(106, 90, 205, 0.95); /* roxo translúcido */
-    backdrop-filter: blur(10px);
-    padding: 60px 50px; /* Aumentado */
-    border-radius: 25px;
-    box-shadow: 0 12px 45px rgba(0, 0, 0, 0.6);
+/* Main centralizado */
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
     text-align: center;
-    max-width: 800px; /* Aumentado */
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+/* Título principal */
+main h1 {
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+    color: #e3cfff;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Caixa do formulário */
+#produto-form,
+#cadastro-form,
+#login-form {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    padding: 40px 30px;
+    border-radius: 20px;
+    box-shadow: 0 12px 45px rgba(0, 0, 0, 0.5);
+    max-width: 500px;
     width: 100%;
     animation: fadeIn 0.8s ease-out;
 }
 
-h1 {
-    font-size: 3.8em;
-    margin-bottom: 25px;
-    letter-spacing: 1px;
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+/* Subtítulo do formulário */
+#produto-form h1,
+#cadastro-form h1,
+#login-form h1 {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    color: #d6b3ff;
 }
 
-p {
-    font-size: 1.6em;
-    margin-bottom: 35px;
-    line-height: 1.6;
+/* Campos */
+.float-label {
+    margin-bottom: 20px;
+    text-align: left;
 }
 
-.cta-button {
-    text-decoration: none;
-    background: linear-gradient(135deg, #8A6CFF, #6C4EFF); /* Roxo vibrante */
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+    color: #d6b3ff;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="file"],
+input[type="email"],
+input[type="password"],
+input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #b580ff;
+    font-size: 1em;
+    background-color: #f9f6ff;
+    color: #2d003d;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input:focus {
+    outline: none;
+    border-color: #a855f7;
+    box-shadow: 0 0 8px #a855f7aa;
+}
+
+/* Botão principal */
+button[type="submit"] {
+    background: linear-gradient(135deg, #8A6CFF, #6C4EFF);
     color: white;
-    padding: 16px 40px;
+    padding: 14px 32px;
     border-radius: 14px;
-    font-size: 1.4em;
+    font-size: 1.2em;
     font-weight: bold;
     letter-spacing: 0.5px;
     transition: all 0.3s ease;
-    box-shadow: 0 8px 20px rgba(140, 110, 255, 0.6); /* Sombra mais forte */
-    border: 2px solid rgba(255, 255, 255, 0.2); /* Borda leve */
-    position: relative;
-    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(140, 110, 255, 0.6);
+    width: 100%;
+    margin-top: 15px;
 }
 
-.cta-button:hover::after {
-    left: 125%; /* Brilho passa pelo botão */
-}
-
-.cta-button:hover {
-    background-color: #7A65FF; /* Roxo mais claro */
-    transform: translateY(-3px) scale(1.05); /* Leve elevação e zoom */
+button[type="submit"]:hover {
+    background-color: #7A65FF;
+    transform: translateY(-3px) scale(1.05);
     box-shadow: 0 10px 25px rgba(108, 78, 255, 0.6);
 }
 
+/* Link vermelho para ações específicas */
+a.acao-vermelha {
+    color: #ff5e73;
+    font-weight: bold;
+    transition: color 0.3s ease;
+    text-decoration: none;
+}
+
+a.acao-vermelha:hover {
+    color: #ff8899;
+    text-decoration: underline;
+}
+
+/* Mensagens */
+p.mensagem {
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #ffe082;
+    text-align: center;
+}
+
+p.mensagem.sucesso {
+    color: #a5d6a7;
+}
+
+p.mensagem.erro {
+    color: #ef9a9a;
+}
+
+/* Footer leve e elegante */
+footer {
+    margin-top: auto;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    color: white;
+    text-align: center;
+    padding: 20px 15px;
+    font-size: 0.9rem;
+}
 
 /* Animação suave */
 @keyframes fadeIn {
@@ -102,20 +182,18 @@ p {
 
 /* Responsivo */
 @media (max-width: 700px) {
-    .welcome-box {
-        padding: 30px 20px;
+    main h1 {
+        font-size: 2em;
     }
 
-    h1 {
-        font-size: 2.5em;
+    #produto-form,
+    #cadastro-form,
+    #login-form {
+        padding: 25px 20px;
     }
 
-    p {
-        font-size: 1.2em;
-    }
-
-    .cta-button {
+    button[type="submit"] {
         padding: 12px 24px;
-        font-size: 1.1em;
+        font-size: 1em;
     }
 }
