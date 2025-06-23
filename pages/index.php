@@ -23,7 +23,7 @@ include_once '../components/navbar.php';
     <?php
     echo "<p>Hello, World!</p>";
     if (isset($_SESSION['user_id']) && !empty($_SESSION['user_id'])) {
-        // Usuário está logado
+        // Usuário está logados
         $nomeUsuario = $_SESSION['username'];
         
         echo "Bem-vindo, " . htmlspecialchars($nomeUsuario) . "!"; // Evitar XSS
