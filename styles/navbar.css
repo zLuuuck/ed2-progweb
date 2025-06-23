@@ -5,7 +5,8 @@
 }
 
 body {
-    padding-top: 100px; /* Isso empurra o conteúdo para baixo da navbar fixa */
+    padding-top: 100px;
+    /* Isso empurra o conteúdo para baixo da navbar fixa */
     font-family: Arial, sans-serif;
     background-color: #ffffff;
 }
@@ -41,24 +42,27 @@ body {
 
 
 .navbar {
-    background-color: #1e1e1e;
+    background: linear-gradient(135deg, #5E4AE3, #A76BA3);
     color: white;
     padding: 20px 50px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    position: fixed; /* Mude de 'sticky' para 'fixed' */
+    position: fixed;
+    /* Mude de 'sticky' para 'fixed' */
     top: 0;
-    left: 0; /* Garante que ela ocupe toda a largura */
-    width: 100%; /* Garante que ela ocupe toda a largura */
+    left: 0;
+    /* Garante que ela ocupe toda a largura */
+    width: 100%;
+    /* Garante que ela ocupe toda a largura */
     z-index: 1000;
 }
 
 .navbar .logo {
     font-size: 1.4rem;
     font-weight: bold;
-    color: #00aced;
+    color: #ffffff;
     text-decoration: none;
     flex-shrink: 0;
 }
@@ -95,7 +99,7 @@ body {
     left: 0;
     width: 100%;
     height: 2px;
-    background-color: #00aced;
+    background-color: #5E4AE3;
     /* Cor padrão do sublinhado (azul) */
     transform: translateX(-100%);
     transition: transform 0.3s ease;
@@ -108,13 +112,13 @@ body {
 
 .navbar-list li a:hover {
     transform: translateY(-2px);
-        color: #008ccb;
+    color: #ffffff;
 }
 
 /* Efeito ao clicar (ativo) para TODOS os links */
 .navbar-list li a:active {
     transform: translateY(1px);
-    color: #008ccb;
+    color: #ffffff;
     /* Um tom ligeiramente mais escuro ao clicar */
 }
 
@@ -134,7 +138,7 @@ body {
 
 /* Efeito hover para o link Sair */
 .navbar-list li a.btn-sair:hover {
-    color: #c82333;
+    color: #ffffff;
     /* Texto vermelho mais escuro no hover */
 }
 
@@ -162,21 +166,28 @@ body {
 @media (max-width: 768px) {
     .navbar {
         flex-wrap: wrap;
-        padding: 15px 30px; /* Ajustado um pouco para o mobile, mas sinta-se à vontade para alterar */
+        padding: 15px 30px;
+        /* Ajustado um pouco para o mobile, mas sinta-se à vontade para alterar */
     }
 
     .navbar-list {
         display: none;
         flex-direction: column;
         width: 100%;
-        margin-top: 15px; /* Aumentei um pouco a margem superior para separar mais da navbar */
+        margin-top: 15px;
+        /* Aumentei um pouco a margem superior para separar mais da navbar */
         flex-basis: 100%;
         justify-content: flex-start;
-        align-items: center; /* Centraliza os itens na coluna */
-        background-color: #1a1a1a; /* Fundo ligeiramente mais claro que a navbar para contraste */
-        padding: 10px 0; /* Padding vertical para a lista inteira */
-        border-radius: 0 0 8px 8px; /* Bordas arredondadas na parte inferior do menu */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4); /* Sombra para dar profundidade */
+        align-items: center;
+        /* Centraliza os itens na coluna */
+        background-color: #1a1a1a;
+        /* Fundo ligeiramente mais claro que a navbar para contraste */
+        padding: 10px 0;
+        /* Padding vertical para a lista inteira */
+        border-radius: 0 0 8px 8px;
+        /* Bordas arredondadas na parte inferior do menu */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        /* Sombra para dar profundidade */
     }
 
     .navbar-list.active {
@@ -188,62 +199,113 @@ body {
     }
 
     .navbar-list li {
-        width: 100%; /* Garante que o item da lista ocupe toda a largura */
-        text-align: center; /* Centraliza o texto dos links */
+        width: 100%;
+        /* Garante que o item da lista ocupe toda a largura */
+        text-align: center;
+        /* Centraliza o texto dos links */
         /* Removido border-top aqui para usar a borda no a */
     }
 
     .navbar-list li a {
-        display: block; /* Ocupa a largura total do li para o hover funcionar bem */
-        padding: 15px 20px; /* Aumentei o padding para os links parecerem mais clicáveis */
-        color: white; /* Garante a cor branca para links normais */
-        transition: background-color 0.3s ease, color 0.3s ease; /* Transição para o hover */
-        border-top: 1px solid rgba(255, 255, 255, 0.1); /* Borda suave para separar itens */
-        /* Ajuste para o primeiro item não ter borda superior, ou se desejar, remova isso */
-        /* Se você quiser borda em todos, pode remover a linha abaixo */
-        &:first-child {
-            border-top: none;
-        }
+        display: block;
+        /* Ocupa a largura total do li para o hover funcionar bem */
+        padding: 15px 20px;
+        /* Aumentei o padding para os links parecerem mais clicáveis */
+        color: white;
+        /* Garante a cor branca para links normais */
+        transition: background-color 0.3s ease, color 0.3s ease;
+        /* Transição para o hover */
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        /* Borda suave para separar itens */
     }
 
     /* Efeito de hover para itens do menu mobile */
     .navbar-list li a:hover {
-        background-color: #2a2a2a; /* Fundo mais claro no hover */
-        color: #00aced; /* Cor do texto no hover */
-        transform: none; /* Remove o efeito de levantamento se não quiser no mobile */
+        background-color: #2a2a2a;
+        /* Fundo mais claro no hover */
+        color: #00aced;
+        /* Cor do texto no hover */
+        transform: none;
+        /* Remove o efeito de levantamento se não quiser no mobile */
     }
 
     /* Efeito active para itens do menu mobile */
     .navbar-list li a:active {
-        background-color: #3a3a3a; /* Fundo ainda mais claro ao clicar */
-        color: #00aced; /* Cor do texto ao clicar */
+        background-color: #3a3a3a;
+        /* Fundo ainda mais claro ao clicar */
+        color: #00aced;
+        /* Cor do texto ao clicar */
         transform: none;
     }
 
     /* Oculta o sublinhado e ajusta padding-bottom para todos os links no mobile */
     .navbar-list li a::after {
-        display: none; /* Oculta o sublinhado */
+        display: none;
+        /* Oculta o sublinhado */
     }
+
     .navbar-list li a {
-        padding-bottom: 15px; /* Ajusta o padding-bottom para igualar o padding-top */
+        padding-bottom: 15px;
+        /* Ajusta o padding-bottom para igualar o padding-top */
     }
 
 
     /* Ajustes específicos para o link Sair no mobile */
     .navbar-list li a.btn-sair {
-        color: #dc3545; /* Mantém a cor vermelha para o texto */
+        color: #dc3545;
+        /* Mantém a cor vermelha para o texto */
         /* Remove o margin auto se os itens estiverem centralizados com align-items: center */
         margin: 0;
     }
 
     .navbar-list li a.btn-sair:hover {
-        background-color: #3a3a3a; /* Fundo no hover (pode ser diferente para o Sair) */
-        color: #c82333; /* Texto vermelho mais escuro no hover */
+        background-color: #3a3a3a;
+        /* Fundo no hover (pode ser diferente para o Sair) */
+        color: #c82333;
+        /* Texto vermelho mais escuro no hover */
     }
 
     .navbar-list li a.btn-sair:active {
-        background-color: #4a4a4a; /* Fundo no active */
-        color: #bd2130; /* Texto vermelho ao clicar */
+        background-color: #4a4a4a;
+        /* Fundo no active */
+        color: #bd2130;
+        /* Texto vermelho ao clicar */
     }
 }
 
+footer {
+    margin-top: auto;
+    width: 100%;
+    background: linear-gradient(135deg, #5E4AE3, #A76BA3);
+    backdrop-filter: blur(10px);
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    color: white;
+    text-align: center;
+    padding: 20px 15px;
+}
+
+
+
+footer p {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* Ícones sociais */
+.social-icons {
+    margin-top: 10px;
+}
+
+.social-icons a {
+    color: #ffffff;
+    font-size: 24px;
+    margin: 0 12px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.social-icons a:hover {
+    color: #BCA0FF;
+    /* Lilás claro para hover, combinando com navbar */
+}

@@ -122,15 +122,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adicone Produtos</title>
-    <link rel="stylesheet" href="../styles/add-produtos.css">
+    <link rel="stylesheet" href="../styles/a1dd-produtos.css">
     <link rel="stylesheet" href="../styles/navbar.css">
+    <script src="https://kit.fontawesome.com/0dc50eaa4b.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
     <?php
     include_once '../components/navbar.php';
     ?>
-
+<main>
     <h1>Adicione um produto à loja!</h1>
     <div id="produto-form">
         <h1>Seu produto:</h1>
@@ -161,6 +162,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button type="submit">Adicionar Produto</button>
         </form>
     </div>
+</main>
+    <?php
+    include_once '../components/footer.php';
+    ?>
 </body>
 
 </html>

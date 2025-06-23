@@ -2,7 +2,6 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -11,47 +10,23 @@ if (session_status() === PHP_SESSION_NONE) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>testes</title>
-    <link rel="stylesheet" href="../styles/index.css">
     <link rel="stylesheet" href="../styles/navbar.css">
+    <link rel="stylesheet" href="../styles/style.css">
+    <script src="https://kit.fontawesome.com/0dc50eaa4b.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
 
-<?php
-include_once '../components/navbar.php';
-?>
-
-<h1>Home</h1>
-    
     <?php
-    echo "<p>Hello, World!</p>";
-    if (isset($_SESSION['user_id']) && !empty($_SESSION['user_id'])) {
-        // Usuário está logado
-        $nomeUsuario = $_SESSION['username'];
-        
-        echo "Bem-vindo, " . htmlspecialchars($nomeUsuario) . "!"; // Evitar XSS
-        echo "<br>";
-        echo "Seu ID de usuário é: " . htmlspecialchars($_SESSION['user_id']); //
-        echo "<br>";
-        echo "Seu nome é: " . htmlspecialchars($_SESSION['nome']); // Evitar XSS
-        echo "<br>";
-        echo "<form action='./login/logout.php' method='post' style='display: inline;'> <button type='submit'>Sair</button></form>";
-    } else {
-        // Usuário não está logado
-        echo "Você não está logado. Por favor, faça login.";
-        echo "<br>";
-        echo "<a href='./login/login.php'><button>login</button></a>";
-    }
+    include_once '../components/navbar.php';
     ?>
-
-
-    <h2> Botões de ação - testes - </h2>
-    <a href="./perfil.php"><button>Perfil</button></a><br>
-    <a href="./produtos.php"><button>Produtos</button></a><br>
-    <a href="./add-produtos.php"><button>Adicionar produtos</button></a><br>
-    <a href="./sobre.php"><button>Sobre</button></a><br>
-    <a href="./login/login.php"><button>Login</button></a><br>
-    <a href="./login/registro.php"><button>Registro</button></a><br>
+    <main>
+        <div class="welcome-box">
+            <h1>Bem vindo ao Guri Games!</h1>
+            <p>Este é nosso site!</p>
+            <a href="../produtos.php" class="cta-button">Ver Produtos</a>
+        </div>
+    </main>
 
     <?php
     include_once '../components/footer.php';

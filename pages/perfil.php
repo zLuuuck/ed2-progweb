@@ -13,6 +13,7 @@ verificarSeEstaLogado("Deslogado");
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil</title>
     <link rel="stylesheet" href="../styles/navbar.css">
+    <script src="https://kit.fontawesome.com/0dc50eaa4b.js" crossorigin="anonymous"></script>
     <style>
         .profile-container {
             max-width: 600px;
@@ -71,5 +72,8 @@ verificarSeEstaLogado("Deslogado");
             ?>
         </div>
     </div>
+    <?php
+    include_once '../components/footer.php';
+    ?>
 </body>
 </html>

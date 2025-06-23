@@ -26,27 +26,15 @@ $socialMedia = [
     ]
 ];
 ?>
-    <footer>
-        <p>© <?php echo $currentYear; ?> <?php echo $companyName; ?>. Todos os direitos reservados.</p>
-        
-        <div class="social-icons">
-            <?php foreach ($socialMedia as $platform => $data): ?>
-                <a href="<?php echo htmlspecialchars($data['url']); ?>" target="_blank" aria-label="Visite nosso <?php echo $platform; ?>">
-                    <i class="<?php echo htmlspecialchars($data['icon_class']); ?>"></i>
-                </a>
-            <?php endforeach; ?>
-        </div>
-    </footer>
 
-    <script src="/site/scripts/navbar.js"></script>
+<footer>
+    <p>© <?php echo $currentYear; ?> <?php echo $companyName; ?>. Todos os direitos reservados.</p>
 
-    <?php
-    if (isset($pageScripts) && is_array($pageScripts)) {
-        foreach ($pageScripts as $script) {
-            echo '<script src="' . htmlspecialchars($script) . '"></script>';
-        }
-    }
-    ?>
-
-</body>
-</html>
+    <div class="social-icons">
+        <?php foreach ($socialMedia as $platform => $data): ?>
+            <a href="<?php echo htmlspecialchars($data['url']); ?>" target="_blank" aria-label="Visite nosso <?php echo $platform; ?>">
+                <i class="<?php echo htmlspecialchars($data['icon_class']); ?>"></i>
+            </a>
+        <?php endforeach; ?>
+    </div>
+</footer>

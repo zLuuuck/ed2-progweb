@@ -205,73 +205,80 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $isAdmin && isset($_POST['atualizar
     <title>Produtos</title>
     <link rel="stylesheet" href="../styles/produtos.css">
     <link rel="stylesheet" href="../styles/navbar.css">
+    <script src="https://kit.fontawesome.com/0dc50eaa4b.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
     <?php include_once '../components/navbar.php'; ?>
-    <h1>Produtos Cadastrados</h1>
+    <main>
 
-    <?php if ($mensagem): ?>
-        <?= $mensagem; ?>
-    <?php endif; ?>
-
-    <form method="get" style="margin-bottom: 20px;">
-        <label for="filtro">Buscar por nome:</label>
-        <input type="text" id="filtro" name="filtro" value="<?= htmlspecialchars($_GET['filtro'] ?? '') ?>">
-
-        <label for="ordenar">Ordenar por:</label>
-        <select name="ordenar" id="ordenar">
-            <option value="">-- Selecione --</option>
-            <option value="az" <?= ($_GET['ordenar'] ?? '') === 'az' ? 'selected' : '' ?>>Nome A-Z</option>
-            <option value="za" <?= ($_GET['ordenar'] ?? '') === 'za' ? 'selected' : '' ?>>Nome Z-A</option>
-            <option value="novo" <?= ($_GET['ordenar'] ?? '') === 'novo' ? 'selected' : '' ?>>Mais novo</option>
-            <option value="antigo" <?= ($_GET['ordenar'] ?? '') === 'antigo' ? 'selected' : '' ?>>Mais antigo</option>
-            <option value="maior_qtd" <?= ($_GET['ordenar'] ?? '') === 'maior_qtd' ? 'selected' : '' ?>>Maior quantidade</option>
-            <option value="menor_qtd" <?= ($_GET['ordenar'] ?? '') === 'menor_qtd' ? 'selected' : '' ?>>Menor quantidade</option>
-        </select>
-
-        <button type="submit">Filtrar</button>
-    </form>
-
-    <?php if (empty($produtos)): ?>
-        <p>Nenhum produto cadastrado.</p>
-    <?php else: ?>
-        <?php foreach ($produtos as $produto): ?>
-            <div class="produto" data-id="<?= $produto['id'] ?>">
-                <div class="view-mode">
-                    <h3><?= htmlspecialchars($produto['nome']) ?></h3>
-                    <p><strong>Modelo:</strong> <?= htmlspecialchars($produto['modelo']) ?></p>
-                    <p><strong>Cor:</strong> <?= htmlspecialchars($produto['cor']) ?></p>
-                    <p><strong>Quantidade:</strong> <?= $produto['quantidade'] ?></p>
-                    <?php if (!empty($produto['imagem'])): ?>
-                        <img src="<?= htmlspecialchars($produto['imagem']) ?>" alt="Imagem do produto" width="150" />
-                    <?php else: ?>
-                        <p><em>Imagem não disponível</em></p>
-                    <?php endif; ?>
+        <h1>Produtos Cadastrados</h1>
+    
+        <?php if ($mensagem): ?>
+            <?= $mensagem; ?>
+        <?php endif; ?>
+    
+        <form method="get" style="margin-bottom: 20px;">
+            <label for="filtro">Buscar por nome:</label>
+            <input type="text" id="filtro" name="filtro" value="<?= htmlspecialchars($_GET['filtro'] ?? '') ?>">
+    
+            <label for="ordenar">Ordenar por:</label>
+            <select name="ordenar" id="ordenar">
+                <option value="">-- Selecione --</option>
+                <option value="az" <?= ($_GET['ordenar'] ?? '') === 'az' ? 'selected' : '' ?>>Nome A-Z</option>
+                <option value="za" <?= ($_GET['ordenar'] ?? '') === 'za' ? 'selected' : '' ?>>Nome Z-A</option>
+                <option value="novo" <?= ($_GET['ordenar'] ?? '') === 'novo' ? 'selected' : '' ?>>Mais novo</option>
+                <option value="antigo" <?= ($_GET['ordenar'] ?? '') === 'antigo' ? 'selected' : '' ?>>Mais antigo</option>
+                <option value="maior_qtd" <?= ($_GET['ordenar'] ?? '') === 'maior_qtd' ? 'selected' : '' ?>>Maior quantidade</option>
+                <option value="menor_qtd" <?= ($_GET['ordenar'] ?? '') === 'menor_qtd' ? 'selected' : '' ?>>Menor quantidade</option>
+            </select>
+    
+            <button type="submit">Filtrar</button>
+        </form>
+    
+        <?php if (empty($produtos)): ?>
+            <p>Nenhum produto cadastrado.</p>
+        <?php else: ?>
+            <?php foreach ($produtos as $produto): ?>
+                <div class="produto" data-id="<?= $produto['id'] ?>">
+                    <div class="view-mode">
+                        <h3><?= htmlspecialchars($produto['nome']) ?></h3>
+                        <p><strong>Modelo:</strong> <?= htmlspecialchars($produto['modelo']) ?></p>
+                        <p><strong>Cor:</strong> <?= htmlspecialchars($produto['cor']) ?></p>
+                        <p><strong>Quantidade:</strong> <?= $produto['quantidade'] ?></p>
+                        <?php if (!empty($produto['imagem'])): ?>
+                            <img src="<?= htmlspecialchars($produto['imagem']) ?>" alt="Imagem do produto" width="150" />
+                        <?php else: ?>
+                            <p><em>Imagem não disponível</em></p>
+                        <?php endif; ?>
+                        <?php if ($isAdmin): ?>
+                            <button class="btn-editar">Editar</button>
+                            <form method="post" action="" style="display:inline;" onsubmit="return confirm('Deseja excluir?');">
+                                <input type="hidden" name="excluir_id" value="<?= $produto['id'] ?>" />
+                                <button type="submit" style="background-color: red; color: white;">Excluir</button>
+                            </form>
+                        <?php endif; ?>
+                    </div>
                     <?php if ($isAdmin): ?>
-                        <button class="btn-editar">Editar</button>
-                        <form method="post" action="" style="display:inline;" onsubmit="return confirm('Deseja excluir?');">
-                            <input type="hidden" name="excluir_id" value="<?= $produto['id'] ?>" />
-                            <button type="submit" style="background-color: red; color: white;">Excluir</button>
+                        <form class="edit-mode" style="display:none;" enctype="multipart/form-data">
+                            <input type="hidden" name="id" value="<?= $produto['id'] ?>" />
+                            <label>Nome: <input type="text" name="nome" value="<?= htmlspecialchars($produto['nome']) ?>" required /></label><br />
+                            <label>Modelo: <input type="text" name="modelo" value="<?= htmlspecialchars($produto['modelo']) ?>" required /></label><br />
+                            <label>Cor: <input type="text" name="cor" value="<?= htmlspecialchars($produto['cor']) ?>" required /></label><br />
+                            <label>Quantidade: <input type="number" name="quantidade" value="<?= $produto['quantidade'] ?>" required /></label><br />
+                            <label>Imagem: <input type="file" name="imagem" accept="image/*" /></label><br />
+                            <button type="submit">Salvar</button>
+                            <button type="button" class="btn-cancelar">Cancelar</button>
+                            <div class="msg-resultado"></div>
                         </form>
                     <?php endif; ?>
                 </div>
-                <?php if ($isAdmin): ?>
-                    <form class="edit-mode" style="display:none;" enctype="multipart/form-data">
-                        <input type="hidden" name="id" value="<?= $produto['id'] ?>" />
-                        <label>Nome: <input type="text" name="nome" value="<?= htmlspecialchars($produto['nome']) ?>" required /></label><br />
-                        <label>Modelo: <input type="text" name="modelo" value="<?= htmlspecialchars($produto['modelo']) ?>" required /></label><br />
-                        <label>Cor: <input type="text" name="cor" value="<?= htmlspecialchars($produto['cor']) ?>" required /></label><br />
-                        <label>Quantidade: <input type="number" name="quantidade" value="<?= $produto['quantidade'] ?>" required /></label><br />
-                        <label>Imagem: <input type="file" name="imagem" accept="image/*" /></label><br />
-                        <button type="submit">Salvar</button>
-                        <button type="button" class="btn-cancelar">Cancelar</button>
-                        <div class="msg-resultado"></div>
-                    </form>
-                <?php endif; ?>
-            </div>
-        <?php endforeach; ?>
-    <?php endif; ?>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </main>
+    <?php
+    include_once '../components/footer.php';
+    ?>
 
     <script>
         // Função para alternar modo edição e visualização

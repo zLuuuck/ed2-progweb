@@ -9,6 +9,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 require_once "../scripts/conectarBanco.php";
 require_once "../scripts/funcLogin.php";
+
 verificarSeEstaLogado('Logado');
 
 $mensagem = '';
@@ -26,14 +27,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <title>Login</title>
     <link rel="stylesheet" href="../styles/login.css">
     <link rel="stylesheet" href="../styles/navbar.css">
+    <script src="https://kit.fontawesome.com/0dc50eaa4b.js" crossorigin="anonymous"></script>
+
 </head>
 
 <body>
     <?php
     include_once '../components/navbar.php';
     ?>
-
-    <a href="../index.php"><button>Voltar</button></a>
+<main>
     <div id="login-form">
         <h1>Login</h1>
         <!-- Mostrando a mensagem de erro ou sucesso ~ Lucas -->
@@ -61,6 +63,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </form>
         <p>Não tem uma conta? <a href="./registro.php">Cadastre-se</a></p>
     </div>
+</main>
+
+    <?php
+    include_once '../components/footer.php';
+    ?>
 </body>
 
 </html>

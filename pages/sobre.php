@@ -14,6 +14,7 @@ if (session_status() === PHP_SESSION_NONE) {
     <link rel="stylesheet" href="/site/css/sobre.css">
     <script src="https://kit.fontawesome.com/0dc50eaa4b.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../styles/navbar.css">
+    <script src="https://kit.fontawesome.com/0dc50eaa4b.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -43,18 +44,9 @@ if (session_status() === PHP_SESSION_NONE) {
         </section>
     </main>
 
-    <footer>
-        <p>© 2024 Guri Games. Todos os direitos reservados.</p>
-
-        <div class="social-icons">
-            <a href="https://www.instagram.com/z_luuuck/" target="_blank"><i class="fab fa-instagram"></i></a>
-            <a href="https://www.youtube.com/@zLuuck" target="_blank"><i class="fab fa-youtube"></i></a>
-            <a href="https://wa.me/5541999016605" target="_blank"><i class="fab fa-whatsapp"></i></a>
-            <a href="https://www.linkedin.com/in/lucastoterol/" target="_blank"><i class="fab fa-linkedin"></i></a>
-            <a href="https://github.com/zLuuuck" target="_blank"><i class="fab fa-github"></i></a>
-        </div>
-    </footer>
-
+    <?php
+    include_once '../components/footer.php';
+    ?>
 </body>
 
 </html>

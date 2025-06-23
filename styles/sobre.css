@@ -13,17 +13,24 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Orbitron', sans-serif;
+    font-family: Arial, sans-serif;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 
-body {
-    background: var(--background-dark);
-    color: var(--text-primary);
-    overflow-x: hidden; 
-    min-height: 100vh; 
-    display: flex;
-    flex-direction: column;
+main {
+  flex: 1; /* conteúdo principal ocupa todo o espaço disponível */
+  padding: 20px;
 }
 
 

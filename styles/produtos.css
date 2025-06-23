@@ -5,6 +5,23 @@
     font-family: Arial, sans-serif;
 }
 
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+
+main {
+  flex: 1; /* conteúdo principal ocupa todo o espaço disponível */
+  padding: 20px;
+}
+
 button {
     margin-top: 10px;
     padding: 10px 150px;

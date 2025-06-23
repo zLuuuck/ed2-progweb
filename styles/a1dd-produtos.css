@@ -1,0 +1,152 @@
+/* Reset e fonte padrão */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+/* Layout principal */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #5E4AE3, #A76BA3);
+    color: white;
+    overflow: auto;
+}
+
+/* Main centralizado */
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+/* Título principal */
+main h1 {
+    font-size: 3em;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Caixa do formulário */
+#produto-form {
+    background: rgba(106, 90, 205, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 40px 30px;
+    border-radius: 25px;
+    box-shadow: 0 12px 45px rgba(0, 0, 0, 0.6);
+    max-width: 500px;
+    width: 100%;
+    animation: fadeIn 0.8s ease-out;
+}
+
+/* Subtítulo do formulário */
+#produto-form h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+/* Campos */
+.float-label {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1em;
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+/* Botão */
+button[type="submit"] {
+    background: linear-gradient(135deg, #8A6CFF, #6C4EFF);
+    color: white;
+    padding: 14px 32px;
+    border-radius: 14px;
+    font-size: 1.2em;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(140, 110, 255, 0.6);
+}
+
+button[type="submit"]:hover {
+    background-color: #7A65FF;
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 25px rgba(108, 78, 255, 0.6);
+}
+
+/* Mensagens */
+p.mensagem {
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Footer compatível 
+footer {
+    margin-top: auto;
+    width: 100%;
+    background: rgba(106, 90, 205, 0.85);
+    backdrop-filter: blur(10px);
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+    color: white;
+    text-align: center;
+    padding: 20px 15px;
+}
+*/
+
+/* Animação suave */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsivo */
+@media (max-width: 700px) {
+    main h1 {
+        font-size: 2em;
+    }
+
+    #produto-form {
+        padding: 25px 20px;
+    }
+
+    button[type="submit"] {
+        padding: 12px 24px;
+        font-size: 1em;
+    }
+}
