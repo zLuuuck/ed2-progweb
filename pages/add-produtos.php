@@ -129,38 +129,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php
     include_once '../components/navbar.php';
     ?>
-<main>
-    <h1>Adicione um produto à loja!</h1>
-    <div id="produto-form">
-        <h1>Seu produto:</h1>
-        <?php if ($_SERVER["REQUEST_METHOD"] === "POST" && $mensagem): ?>
-            <?= $mensagem ?>
-        <?php endif; ?>
-        <form action="" method="post" enctype="multipart/form-data">
-            <div class="float-label">
-                <label for="nome">Nome:</label>
-                <input type="text" name="nome" required value="<?= htmlspecialchars($nome) ?>">
-            </div>
-            <div class="float-label">
-                <label for="modelo">Modelo:</label>
-                <input type="text" name="modelo" required value="<?= htmlspecialchars($modelo) ?>">
-            </div>
-            <div class="float-label">
-                <label for="cor">Cor:</label>
-                <input type="text" name="cor" required value="<?= htmlspecialchars($cor) ?>">
-            </div>
-            <div class="float-label">
-                <label for="quantidade">Quantidade:</label>
-                <input type="number" name="quantidade" min="1" required value="<?= htmlspecialchars($quantidade) ?>">
-            </div>
-            <div class="float-label">
-                <label for="imagem">Imagem (JPG, PNG, GIF):</label>
-                <input type="file" name="imagem" accept="image/*" required>
-            </div>
-            <button type="submit">Adicionar Produto</button>
-        </form>
-    </div>
-</main>
+    <main>
+        <div class="form-box">
+            <h1>Adicione um produto à loja!</h1>
+            <h2>Seu produto:</h2>
+
+            <?php if ($_SERVER["REQUEST_METHOD"] === "POST" && $mensagem): ?>
+                <?= $mensagem ?>
+            <?php endif; ?>
+
+            <form action="" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="nome">Nome:</label>
+                    <input type="text" name="nome" required value="<?= htmlspecialchars($nome) ?>">
+                </div>
+
+                <div class="form-group">
+                    <label for="modelo">Modelo:</label>
+                    <input type="text" name="modelo" required value="<?= htmlspecialchars($modelo) ?>">
+                </div>
+
+                <div class="form-group">
+                    <label for="cor">Cor:</label>
+                    <input type="text" name="cor" required value="<?= htmlspecialchars($cor) ?>">
+                </div>
+
+                <div class="form-group">
+                    <label for="quantidade">Quantidade:</label>
+                    <input type="number" name="quantidade" min="1" required value="<?= htmlspecialchars($quantidade) ?>">
+                </div>
+
+                <div class="form-group">
+                    <label for="imagem">Imagem (JPG, PNG, GIF):</label>
+                    <input type="file" name="imagem" accept="image/*" required>
+                </div>
+
+                <button type="submit">Adicionar Produto</button>
+            </form>
+        </div>
+    </main>
+
     <?php
     include_once '../components/footer.php';
     ?>

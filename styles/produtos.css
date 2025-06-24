@@ -1,40 +1,83 @@
+/* Reset e base */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Usando a mesma fonte do perfil */
 }
 
 html, body {
-  height: 100%;
-  margin: 0;
+    height: 100%;
+    margin: 0;
 }
 
 body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #5E4AE3, #A76BA3); /* Mantendo o mesmo fundo */
+    color: white; /* Cor do texto */
 }
-
 
 main {
-  flex: 1; /* conteúdo principal ocupa todo o espaço disponível */
-  padding: 20px;
-}
-
-button {
-    margin-top: 10px;
-    padding: 10px 150px;
+    flex: 1; /* Conteúdo principal ocupa todo o espaço disponível */
+    padding: 20px;
+    display: flex;
+    flex-direction: column; /* Para empilhar elementos verticalmente */
+    align-items: center; /* Centraliza horizontalmente */
 }
 
 h1 {
-    color: #333;
+    color: #fff; /* Cor do título */
+    text-align: center; /* Centraliza o título */
+    margin-bottom: 20px; /* Espaçamento abaixo do título */
+}
+
+form {
+    display: flex; /* Usando flexbox para melhor alinhamento */
+    flex-direction: column; /* Alinhando os elementos verticalmente */
+    margin-bottom: 20px; /* Espaçamento abaixo do formulário */
+    width: 100%; /* Para ocupar toda a largura disponível */
+    max-width: 600px; /* Limita a largura do formulário */
+}
+
+label {
+    margin-bottom: 5px; /* Espaçamento abaixo dos rótulos */
+    color: #fff; /* Cor dos rótulos */
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 15px; /* Espaçamento entre os campos */
+    font-size: 1em; /* Tamanho da fonte */
+}
+
+button {
+    padding: 10px 20px; /* Ajuste do padding */
+    border: none; /* Remove bordas padrão */
+    border-radius: 5px; /* Bordas arredondadas */
+    background-color: #5E4AE3; /* Cor de fundo do botão */
+    color: white; /* Cor do texto do botão */
+    cursor: pointer; /* Muda o cursor ao passar o mouse */
+    transition: background-color 0.3s; /* Transição suave para a cor de fundo */
+}
+
+button:hover {
+    background-color: #A76BA3; /* Cor de fundo ao passar o mouse */
 }
 
 .produto {
-    border: 1px solid #ccc;
-    padding: 10px;
+    background: rgba(255, 255, 255, 0.1); /* Fundo semi-transparente */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Borda semi-transparente */
+    padding: 15px;
     margin-bottom: 20px;
+    border-radius: 10px; /* Bordas arredondadas */
+    width: 100%; /* Para ocupar toda a largura disponível */
+    max-width: 600px; /* Limita a largura do produto */
 }
 
 img {
@@ -42,7 +85,31 @@ img {
     height: auto;
 }
 
-form {
-    display: inline-block;
-    margin-left: 10px;
+.view-mode {
+    margin-bottom: 15px; /* Espaçamento abaixo do modo de visualização */
+}
+
+.edit-mode {
+    display: none; /* Inicialmente escondido */
+}
+
+.btn-editar,
+.btn-cancelar {
+    background-color: #5E4AE3; /* Cor do botão de editar */
+    color: white; /* Cor do texto do botão */
+    border: none; /* Remove bordas padrão */
+    border-radius: 5px; /* Bordas arredondadas */
+    padding: 5px 10px; /* Ajuste do padding */
+    cursor: pointer; /* Muda o cursor ao passar o mouse */
+}
+
+.btn-editar:hover,
+.btn-cancelar:hover {
+    background-color: #A76BA3; /* Cor de fundo ao passar o mouse */
+}
+
+/* Mensagens de resultado */
+.msg-resultado {
+    margin-top: 10px;
+    color: #ffcc00; /* Cor para mensagens de resultado */
 }
