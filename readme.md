@@ -4,7 +4,7 @@ Instruções:
 
 -> Para adicionar produtos, precisa estar logado
 -> Como medida de segurança, para deletar produtos, precisa ser adm (id=1)
-    -> Login: gurizoes -> Senha Atapo660@
+    -> Login: gurizao -> Senha Atapo660@
 
 ● Criar uma aplicação WEB contendo uma página de login. O formulário de autenticação
 deverá validar o usuário e senha no backend com PHP e SQLite; V
