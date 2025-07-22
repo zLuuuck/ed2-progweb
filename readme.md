@@ -1,4 +1,4 @@
-<img href="./imgs/tuiuti.png"/>
+<img href="/imgs/tuiuti.png"/>
 Projeto feito para a faculdade.
 
 Instruções:
