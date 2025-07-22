@@ -1,4 +1,5 @@
-<img href="/imgs/tuiuti.png"/>
+![tuiti](imgs/tuiti.png)
+
 Projeto feito para a faculdade.
 
 Instruções:
